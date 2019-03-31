@@ -27,5 +27,8 @@
   "bugs": {
     "url": "https://github.com/ernest4/sapphire-api-generator/issues"
   },
-  "homepage": "https://github.com/ernest4/sapphire-api-generator#readme"
+  "homepage": "https://github.com/ernest4/sapphire-api-generator#readme",
+  "dependencies": {
+    "commander": "^2.19.0"
+  }
 }
