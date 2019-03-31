@@ -15,7 +15,9 @@ Convention over configuration? Why choose?! Welcome to the configurable conventi
 * If you know what MVC is and appreciate Rails, but want the speed and power of Node.js with the niceties of Rails, this is the framework for you.
 
 
-<!-- need to set up the badges later WIP WIP WIP...
+<!-- 
+need to set up the badges later WIP WIP WIP...
+
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Linux Build][travis-image]][travis-url]
