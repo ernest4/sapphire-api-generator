@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const fs = require("fs");
 const program = require("commander");
 
 const VERSION = "0.1.0"; // TODO: read this from package.json
@@ -22,11 +23,16 @@ program
 
     console.log(
       `
-      initializing the api for ${app_name}:
+       initializing the api for ${app_name}:
       `
     );
 
-    console.log(init(options));
+    let initGenerator = init(app_name, options);
+    let iteration = initGenerator.next();
+    while (!iteration.done) {
+      console.log(`       ${iteration.value}`);
+      iteration = initGenerator.next();
+    }
   });
 
 program
@@ -39,20 +45,20 @@ program
 
     console.log(
       `
-      generating asset "${asset}":
+       generating asset "${asset}":
 
-      routes:     ${version}/routes/${asset}.routes.js
-      controller: ${version}/controllers/${asset}.controller.js
-      model:      ${version}/models/${asset}.model.js
-      service:    ${version}/services/${asset}.service.js
+       routes:     ${version}/routes/${asset}.routes.js
+       controller: ${version}/controllers/${asset}.controller.js
+       model:      ${version}/models/${asset}.model.js
+       service:    ${version}/services/${asset}.service.js
 
-      Endpoints:
-        GET:    ${version}/${asset}
-        POST:   ${version}/${asset}
+       Endpoints:
+         GET:    ${version}/${asset}
+         POST:   ${version}/${asset}
 
-        GET:    ${version}/${asset}/:${asset}Id
-        PUT:    ${version}/${asset}/:${asset}Id
-        DELETE: ${version}/${asset}/:${asset}Id
+         GET:    ${version}/${asset}/:${asset}Id
+         PUT:    ${version}/${asset}/:${asset}Id
+         DELETE: ${version}/${asset}/:${asset}Id
 
       `
     );
@@ -81,14 +87,29 @@ program
 
 program.parse(process.argv);
 
-function init(options) {
-  return "initializing...";
+function* init(app_name, options) {
+  const version = `/api/v1`;
+  const server_source = "hello!";
+
+  try {
+    // fs.writeFileSync(`./${app_name}${version}/server.js`, server_source);
+    yield `created: ./${app_name}${version}/server.js`;
+    yield `created: another file`; // TESTING
+    yield `created: yet another file`; // TESTING
+    return `success`;
+  } catch (err) {
+    return `
+      SOMETHING WENT WRONG: ${err}
+
+      failed
+    `;
+  }
 }
 
-function generate(asset, options){
-  return "generating..."
+function generate(asset, options) {
+  return "generating...";
 }
 
-function seed(asset, options){
-  return "seeding..."
+function seed(asset, options) {
+  return "seeding...";
 }
