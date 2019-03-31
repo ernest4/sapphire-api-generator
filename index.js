@@ -12,7 +12,9 @@ program
   .description("initialize the base structure of your api")
   .option("--no-git", "don't add a git repo")
   .option("--no-intro", "don't add the _intro.txt files which explain the directories")
+  .option("--no-security", "don't add security middleware")
   .option("-H, --heroku", "add a Heroku Procfile for deploying to Heroku")
+  .option("-a, --auth", "add authorization of routes")
   .action((app_name, options) => {
     // console.log(`app name: ${app_name}, test: ${options.test}`);
     // if (options.heroku) console.log("yay heroku!");
@@ -21,10 +23,10 @@ program
     console.log(
       `
       initializing the api for ${app_name}:
-
-        ${actions(options)}
       `
     );
+
+    console.log(init(options));
   });
 
 program
@@ -54,6 +56,8 @@ program
 
       `
     );
+
+    console.log(generate(asset, options));
   });
 
 program
@@ -71,10 +75,20 @@ program
       
       `
     );
+
+    console.log(seed(asset, options));
   });
 
 program.parse(process.argv);
 
-function actions(options) {
+function init(options) {
   return "initializing...";
+}
+
+function generate(asset, options){
+  return "generating..."
+}
+
+function seed(asset, options){
+  return "seeding..."
 }
