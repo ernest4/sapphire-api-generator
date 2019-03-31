@@ -74,9 +74,9 @@ You can go to `http://localhost:3000/api/v1/user` to check if the api is working
 
 This generator can also be further configured with the following command line flags.
 
-        --version        output the version number
+    -V, --version        output the version number
         --no-git         don't add a git repo
-        --heroku         add a heroku Procfile
+    -H, --heroku         add a heroku Procfile
     -h, --help           output usage information
 
 ## License
