@@ -14,8 +14,8 @@ Convention over configuration? Why choose?! Welcome to the configurable conventi
 
 * If you know what MVC is and appreciate Rails, but want the speed and power of Node.js with the niceties of Rails, this is the framework for you.
 
-* **RESTlike** because you're free to do what you want with your routes.*
-* **SOAlike** because SOA by definition are over the network, however the services in sapphire don't *have* to be over the network - because you're free to do what you want with your services.*
+*RESTlike because you're free to do what you want with your routes.*
+*SOAlike because SOA by definition are over the network, however the services in sapphire don't have to be over the network - because you're free to do what you want with your services.*
 
 
 <!-- 
