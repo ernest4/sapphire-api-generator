@@ -64,7 +64,7 @@ $ sapphire generate user
 Generate 100 dummy users for testing:
 
 ```bash
-$ sapphire seed user 100
+$ sapphire seed user --count 100
 ```
 
 You can go to `http://localhost:3000/api/v1/user` to check if the api is working and get all users.
