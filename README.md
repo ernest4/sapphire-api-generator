@@ -1,6 +1,6 @@
 # Sapphire
 
-Node.js [Express](https://www.npmjs.com/package/express) REST*like* API generator.
+Node.js [Express](https://www.npmjs.com/package/express) REST*like* SOA*like* API generator.
 
 Where Rails and Sails fails, Sapphire prevails!
 
@@ -10,9 +10,12 @@ Convention over configuration? Why choose?! Welcome to the configurable conventi
 
 * If you want to generate boilerplate so you can focus on development, but still have the fully power to do anything at any time, this is the framework for you.
 
-* If you’re a newbie, starting out and want to build web apps quickly I’d advise Rails. Solid MVC fundamentals will do you well!
+* If you’re a newbie, starting out and want to build web apps quickly I’d advise Rails. Solid MVC fundamentals will do you well, but note that you wont find 'fat' models here, but rather an SOA based architecture!
 
 * If you know what MVC is and appreciate Rails, but want the speed and power of Node.js with the niceties of Rails, this is the framework for you.
+
+**REST*like* because you're free to do what you want with your routes.**
+**SOA*like* because SOA by definition are over the network, however the services in sapphire don't *have* to be over the network - because you're free to do what you want with your services.**
 
 
 <!-- 
