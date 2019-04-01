@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const fc = require("./lib/fileCreators");
 const fs = require("fs");
 const program = require("commander");
 
@@ -17,10 +18,6 @@ program
   .option("-H, --heroku", "add a Heroku Procfile for deploying to Heroku")
   .option("-a, --auth", "add authorization of routes")
   .action((app_name, options) => {
-    // console.log(`app name: ${app_name}, test: ${options.test}`);
-    // if (options.heroku) console.log("yay heroku!");
-    // if (!options.git) console.log("no git!");
-
     console.log(
       `
        initializing the api for ${app_name}:
@@ -28,10 +25,8 @@ program
     );
 
     let initGenerator = init(app_name, options);
-    let iteration = initGenerator.next();
-    while (!iteration.done) {
+    for (let iteration = initGenerator.next(); !iteration.done; iteration = initGenerator.next()) {
       console.log(`       ${iteration.value}`);
-      iteration = initGenerator.next();
     }
   });
 
@@ -89,14 +84,18 @@ program.parse(process.argv);
 
 function* init(app_name, options) {
   const version = `/api/v1`;
-  const server_source = "hello!";
+  const fileCreators = fc.getFileCreators();
 
   try {
-    // fs.writeFileSync(`./${app_name}${version}/server.js`, server_source);
-    yield `created: ./${app_name}${version}/server.js`;
-    yield `created: another file`; // TESTING
-    yield `created: yet another file`; // TESTING
-    return `success`;
+    fs.mkdirSync(`${app_name}${version}`, { recursive: true });
+
+    for (const fileCreator of fileCreators) yield fileCreator(app_name, options);
+
+    return `
+    success
+
+    to launch run: npm run start
+    `;
   } catch (err) {
     return `
       SOMETHING WENT WRONG: ${err}
@@ -106,10 +105,10 @@ function* init(app_name, options) {
   }
 }
 
-function generate(asset, options) {
+function* generate(asset, options) {
   return "generating...";
 }
 
-function seed(asset, options) {
+function* seed(asset, options) {
   return "seeding...";
 }
