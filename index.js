@@ -17,6 +17,7 @@ program
   .option("--no-intro", "don't add the _intro.txt files which explain the directories")
   .option("--no-security", "don't add security middleware")
   .option("--no-readme", "don't add a README.md")
+  .option("--no-ping", "don't add the /ping route for checking API status")
   .option("-H, --heroku", "add a Heroku Procfile for deploying to Heroku")
   .option("-a, --auth", "add authorization of routes")
   .action((app_name, options) => {
