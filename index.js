@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fc = require("./lib/fileCreators");
+const dc = require("./lib/dirCreators");
 const fs = require("fs");
 const program = require("commander");
 
@@ -15,6 +16,7 @@ program
   .option("--no-git", "don't add a git repo")
   .option("--no-intro", "don't add the _intro.txt files which explain the directories")
   .option("--no-security", "don't add security middleware")
+  .option("--no-readme", "don't add a README.md")
   .option("-H, --heroku", "add a Heroku Procfile for deploying to Heroku")
   .option("-a, --auth", "add authorization of routes")
   .action((app_name, options) => {
@@ -26,7 +28,7 @@ program
 
     let initGenerator = init(app_name, options);
     for (let iteration = initGenerator.next(); !iteration.done; iteration = initGenerator.next()) {
-      console.log(`       ${iteration.value}`);
+      if(iteration.value) console.log(`       ${iteration.value}`);
     }
   });
 
@@ -83,25 +85,42 @@ program
 program.parse(process.argv);
 
 function* init(app_name, options) {
-  const version = `/api/v1`;
+  const version = 1;
+  const dirs = ["controllers", "models", "routes", "services"];
   const fileCreators = fc.getFileCreators();
 
   try {
-    fs.mkdirSync(`${app_name}${version}`, { recursive: true });
+    yield `creating directories:
+    `
+    for (const dir of dirs) yield dc.apiDirCreator(app_name, version, dir);
+    yield dc.dirCreator(`${app_name}/api/shared/middleware`);
+    yield dc.dirCreator(`${app_name}/_utils`);
+
+    yield `
+       creating files:
+    `;
 
     for (const fileCreator of fileCreators) yield fileCreator(app_name, options);
 
-    return `
-    success
+    yield `
+       success:
 
-    to launch run: npm run start
+       $ cd ${app_name}
+       $ npm run start
     `;
+
+    return;
   } catch (err) {
-    return `
-      SOMETHING WENT WRONG: ${err}
+    console.log(`
 
-      failed
-    `;
+       ERROR:
+
+       There was an issue :/
+       Could be a bug! Please let me know :)
+
+       ISSUE: ${err.message}
+    `);
+    process.exit(1);
   }
 }
 
