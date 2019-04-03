@@ -56,7 +56,7 @@ $ npm install
 Start your Express.js app at `http://localhost:3001/`:
 
 ```bash
-$ npm start
+$ npm run nodemon
 ```
 
 You can go to (GET) `http://localhost:3001/ping` to check if the api is working.
