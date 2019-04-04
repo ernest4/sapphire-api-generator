@@ -110,6 +110,7 @@ This generator can also be further configured with the following command line fl
       --no-ping      don't add the /ping route for checking API status
       -H, --heroku   add a Heroku Procfile for deploying to Heroku
       -a, --auth     add authorization of routes
+      -l, --logging  add logging middleware
       -h, --help     output usage information
       
  #### I want to add a new asset to my sapphire project:
