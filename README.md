@@ -56,12 +56,12 @@ $ npm install
 Make sure [MongoDB is installed](https://docs.mongodb.com/v3.2/administration/install-community/).
 Run the **Mongo database** before launching the server:
 
-#### Mac
+* #### Mac
 ```bash
 $ mongod --config /usr/local/etc/mongod.conf
 ```
 
-#### Ubuntu
+* #### Ubuntu
 ```bash
 $ sudo service mongod start
 ```
