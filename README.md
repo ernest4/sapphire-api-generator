@@ -110,6 +110,7 @@ This generator can also be further configured with the following command line fl
       
 ### Use cases
 #### I want to create a new sapphire project:
+![Alt Text](https://media.giphy.com/media/Urslb7oSSeRpRKs8MW/giphy.gif)
 
     Usage: init|i [options] <app_name>
 
