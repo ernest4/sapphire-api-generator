@@ -137,6 +137,16 @@ This generator can also be further configured with the following command line fl
       --apiv <version>  specify the api version under which to create the asset
       -h, --help               output usage information
       
+ #### I want to seed an asset in my database (WIP. COMING SOON):
+ 
+    Usage: seed|s [options] <asset>
+
+    generate dummy data for chosen asset
+
+    Options:
+      -c, --count <count>  specify the number of instances of the asset
+      -h, --help           output usage information
+      
  #### I want to update an existing assets model (WIP. COMING SOON):
  
     Usage: update|u [options] <asset> [args...]
