@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const fc = require("./lib/fileCreators");
+const fileCreators = require("./lib/fileCreators");
 const dc = require("./lib/dirCreators");
-const fs = require("fs");
+// const fs = require("fs");
 const program = require("commander");
 
 const VERSION = "0.1.0"; // TODO: read this from package.json
@@ -20,6 +20,7 @@ program
   .option("--no-ping", "don't add the /ping route for checking API status")
   .option("-H, --heroku", "add a Heroku Procfile for deploying to Heroku")
   .option("-a, --auth", "add authorization of routes")
+  .option("-l, --logging", "add logging middleware")
   .action((app_name, options) => {
     console.log(
       `
@@ -143,7 +144,6 @@ program.parse(process.argv);
 function* init(app_name, options) {
   const version = 1;
   const dirs = ["controllers", "models", "routes", "services"];
-  const fileCreators = fc.getFileCreators();
 
   try {
     yield `creating directories:
@@ -162,7 +162,7 @@ function* init(app_name, options) {
        success:
 
        $ cd ${app_name}
-       $ npm run start
+       $ npm run nodemon
     `;
 
     return;
