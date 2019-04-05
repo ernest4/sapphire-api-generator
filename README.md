@@ -134,7 +134,7 @@ This generator can also be further configured with the following command line fl
     generate a database backed asset for your RESTlike api
 
     Options:
-      --api_version <version>  specify the api version under which to create the asset
+      --apiv <version>  specify the api version under which to create the asset
       -h, --help               output usage information
       
  #### I want to update an existing assets model (WIP. COMING SOON):
