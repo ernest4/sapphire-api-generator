@@ -179,7 +179,7 @@ This generator can also be further configured with the following command line fl
       RELATIONSHIP: [many to many]: asset1 many to many asset2
 
         EXAMPLE 2: Will create an api for customers and items, where each customer has many
-                  items in their basket, but an item can belong to many customers too.
+                   items in their basket, but an item can belong to many customers too.
 
         $ sapphire example shoppers
 
