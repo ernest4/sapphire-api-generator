@@ -40,40 +40,53 @@ $ npm install -g sapphire-api-generator
 
 The quickest way to get started with sapphire is to utilize the executable `sapphire` to generate an api:
 
-Create the app:
+Create the **app**:
 
 ```bash
 $ sapphire init my_api
 ```
 
-Install dependencies:
+Install **dependencies**:
 
 ```bash
 $ cd my_api
 $ npm install
 ```
 
-Start your Express.js app at `http://localhost:3001/`:
+Make sure [MongoDB is installed](https://docs.mongodb.com/v3.2/administration/install-community/).
+Run the **Mongo database** before launching the server:
+
+* #### Mac
+```bash
+$ mongod --config /usr/local/etc/mongod.conf
+```
+
+* #### Ubuntu
+```bash
+$ sudo service mongod start
+```
+
+Start your **Express.js app** at `http://localhost:3001/`:
 
 ```bash
-$ npm start
+$ npm run nodemon
 ```
 
 You can go to (GET) `http://localhost:3001/ping` to check if the api is working.
 
-Generate the first asset:
+Generate the first **asset**:
 
 ```bash
 $ sapphire generate user
 ```
 
-Generate 100 dummy users for testing:
+Generate **100 dummy users** for testing:
 
 ```bash
 $ sapphire seed user --count 100
 ```
 
-You can go to `http://localhost:3001/api/v1/user` to check if the api is working and get all users.
+You can go to `http://localhost:3001/api/v1/user` to check if the api is working and **get all users**.
 
 
 ## Command Line Options
@@ -97,6 +110,7 @@ This generator can also be further configured with the following command line fl
       
 ### Use cases
 #### I want to create a new sapphire project:
+![Alt Text](https://media.giphy.com/media/Urslb7oSSeRpRKs8MW/giphy.gif)
 
     Usage: init|i [options] <app_name>
 
@@ -110,6 +124,7 @@ This generator can also be further configured with the following command line fl
       --no-ping      don't add the /ping route for checking API status
       -H, --heroku   add a Heroku Procfile for deploying to Heroku
       -a, --auth     add authorization of routes
+      -l, --logging  add logging middleware
       -h, --help     output usage information
       
  #### I want to add a new asset to my sapphire project:
