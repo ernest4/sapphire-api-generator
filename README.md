@@ -215,7 +215,7 @@ $ sapphire update user has name with first and last string required warning 'Ent
 #### Should output (*NOTE: this is end object that mongoose will understand, the schemas in Sapphire will be stored in JSON and loaded in when server starts*):
 
 ```javascript
-let UsersSchema = new mongoose.Schema(
+let UserSchema = new mongoose.Schema(
  {
    name: {
      first: {
