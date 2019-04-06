@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const fileCreators = require("./lib/fileCreators");
+const { initFileCreators, generateFileCreators } = require("./lib/fileCreators");
 const dc = require("./lib/dirCreators");
 // const fs = require("fs");
 const program = require("commander");
@@ -22,13 +22,8 @@ program
   .option("-a, --auth", "add authorization of routes")
   .option("-l, --logging", "add logging middleware")
   .action((app_name, options) => {
-    console.log(
-      `
-       initializing the api for ${app_name}:
-      `
-    );
-
     let initGenerator = init(app_name, options);
+
     for (let iteration = initGenerator.next(); !iteration.done; iteration = initGenerator.next()) {
       if (iteration.value) console.log(`       ${iteration.value}`);
     }
@@ -38,31 +33,18 @@ program
   .command("generate <asset>")
   .alias("g")
   .description("generate a database backed asset for your RESTlike api")
-  .option("--api_version <version>", "specify the api version under which to create the asset")
+  .option("--apiv <version>", "specify the api version under which to create the asset")
+  .option("-m, --model", "only generate a model for this asset")
   .action((asset, options) => {
-    const version = `/api/v${options.api_version || 1}`;
+    let generateGenerator = generate(asset, options);
 
-    console.log(
-      `
-       generating asset "${asset}":
-
-       routes:     ${version}/routes/${asset}.routes.js
-       controller: ${version}/controllers/${asset}.controller.js
-       model:      ${version}/models/${asset}.model.js
-       service:    ${version}/services/${asset}.service.js
-
-       Endpoints:
-         GET:    ${version}/${asset}
-         POST:   ${version}/${asset}
-
-         GET:    ${version}/${asset}/:${asset}Id
-         PUT:    ${version}/${asset}/:${asset}Id
-         DELETE: ${version}/${asset}/:${asset}Id
-
-      `
-    );
-
-    console.log(generate(asset, options));
+    for (
+      let iteration = generateGenerator.next();
+      !iteration.done;
+      iteration = generateGenerator.next()
+    ) {
+      if (iteration.value) console.log(`       ${iteration.value}`);
+    }
   });
 
 program
@@ -88,8 +70,10 @@ program
 // program
 //   .command("update <asset> [args...]")
 //   .alias("u")
-//   .description(`change the asset's model or add relationships to other models:
-  
+//   .option("-r, --rest", "generate the routes, controller and services for existing model of asset")
+//   .description(
+//     `change the asset's model or add relationships to other models:
+
 //   RELATIONSHIP: [one to many]: asset1 has many asset2
 
 //     EXAMPLE 1: one author has many books.
@@ -99,14 +83,15 @@ program
 //   RELATIONSHIP: [many to many]: asset1 many to many asset2
 
 //     EXAMPLE 2: An editor has worked on many articles and an article can have many editors.
-    
+
 //     $ sapphire update editor many to many article
 
 //     EXAMPLE 3: alternatively, you may define relationships one by one.
 
 //     $ sapphire update editor has many article
 //     $ sapphire update article has many editor
-//   `)
+//   `
+//   )
 //   .action((asset, args) => {
 //     // TODO: implement in the future
 //     console.log(asset);
@@ -129,7 +114,7 @@ program
 //   RELATIONSHIP: [many to many]: asset1 many to many asset2
 
 //     EXAMPLE 2: Will create an api for customers and items, where each customer has many
-//               items in their basket, but an item can belong to many customers too.
+//                items in their basket, but an item can belong to many customers too.
 
 //     $ sapphire example shoppers
 //   `)
@@ -146,8 +131,15 @@ function* init(app_name, options) {
   const dirs = ["controllers", "models", "routes", "services"];
 
   try {
+    yield `
+    `;
+
+    yield `initializing the api for ${app_name}:
+    `;
+
     yield `creating directories:
     `;
+
     for (const dir of dirs) yield dc.apiDirCreator(app_name, version, dir);
     yield dc.dirCreator(`${app_name}/api/shared/middleware`);
     yield dc.dirCreator(`${app_name}/_utils`);
@@ -156,10 +148,10 @@ function* init(app_name, options) {
        creating files:
     `;
 
-    for (const fileCreator of fileCreators) yield fileCreator(app_name, options);
+    for (const fileCreator of initFileCreators) yield fileCreator(app_name, options);
 
     yield `
-       success:
+       success!:
 
        $ cd ${app_name}
        $ npm run nodemon
@@ -167,21 +159,39 @@ function* init(app_name, options) {
 
     return;
   } catch (err) {
-    console.log(`
-
-       ERROR:
-
-       There was an issue :/
-       Could be a bug! Please let me know :)
-
-       ISSUE: ${err.message}
-    `);
+    console.log(errMessage(err));
     process.exit(1);
   }
 }
 
 function* generate(asset, options) {
-  return "generating...";
+  const version = `/api/v${options.apiv || 1}`;
+  options.apiv = version;
+
+  try {
+    yield `
+    generating asset "${asset}":
+   `;
+
+    for (const fileCreator of generateFileCreators) yield fileCreator(asset, options);
+
+    yield `
+       success!:
+
+       Endpoints:
+       GET:    ${version}/${asset}
+       POST:   ${version}/${asset}
+
+       GET:    ${version}/${asset}/:${asset}Id
+       PUT:    ${version}/${asset}/:${asset}Id
+       DELETE: ${version}/${asset}/:${asset}Id
+    `;
+
+    return;
+  } catch (err) {
+    console.log(errMessage(err));
+    process.exit(1);
+  }
 }
 
 function* seed(asset, options) {
@@ -190,4 +200,17 @@ function* seed(asset, options) {
 
 function* update(asset, options) {
   return "updating...";
+}
+
+function errMessage(err) {
+  return `
+
+       ERROR:
+
+       There was an issue :/
+       Could be a bug! Please let me know :)
+       GITHUB: https://github.com/ernest4/sapphire-api-generator
+
+       ISSUE: ${err.message}
+`;
 }
