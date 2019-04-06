@@ -135,7 +135,8 @@ This generator can also be further configured with the following command line fl
 
     Options:
       --apiv <version>  specify the api version under which to create the asset
-      -h, --help               output usage information
+      -m, --model       only generate a model for this asset
+      -h, --help        output usage information
       
  #### I want to seed an asset in my database (WIP. COMING SOON):
  
@@ -172,6 +173,7 @@ This generator can also be further configured with the following command line fl
 
 
     Options:
+      -r, --rest  generate the routes, controller and services for existing model of asset
       -h, --help  output usage information
       
 #### I want a complete example (WIP. COMING SOON):
