@@ -200,6 +200,109 @@ This generator can also be further configured with the following command line fl
       -a, --auth  add authorization for the example
       -h, --help  output usage information
 
+# Feature road map
+
+## Asset description language (ADL) for generate and update commands:
+
+The vision is to be able to intuitively describe the asset and it’s fields, in effect, describe it’s model schema via english like description language.
+
+#### Example update (*syntax subject to change*):
+
+```bash
+$ sapphire update user has name with first and last string required warning 'Enter User name' , has birthday date , has gender string enum possible male or female or other default other , has socialId string required warning 'User must have unique social ID' unique , has createdDate date default now , has many hobby
+```
+
+#### Should output (*NOTE: this is end object that mongoose will understand, the schemas in Sapphire will be stored in JSON and loaded in when server starts*):
+
+```javascript
+let UsersSchema = new mongoose.Schema(
+ {
+   name: {
+     first: {
+       type: String,
+       required: [true, "Enter User name"]
+     },
+     last: {
+       type: String,
+       required: [true, "Enter User name"]
+     }
+   },
+   birthday: {
+     type: Date
+   },
+   gender: {
+     type: String,
+     enum: ["m", "f", "o"],
+     default: ["o"]
+   },
+   socialId: {
+     type: String,
+     required: [true, "User must have unique social ID"],
+     unique: true
+   },
+   createdDate: {
+     type: Date,
+     default: Date.now
+   },
+   hobbies: [{ type: mongoose.Schema.Types.ObjectId, ref: ‘Hobby’}],
+ },
+ {
+   getters: true
+ }
+);
+```
+
+### It can be as verbose or terse as you like
+The aim is to promote a fluid stream of though, the following examples are all equivalent, with the exception that the default warning message is overwritten in first command:
+
+```
+$ sapphire update user has a name with first and last of type string that is required with a warning 'Enter User name' if missing , …
+```
+#### Should output:
+
+```javascript
+// ... rest of schema here
+name: {
+  first: {
+    type: String,
+    required: [true, "Enter User name"]
+   },
+    last: {
+      type: String,
+      required: [true, "Enter User name"]
+   }
+},
+// ... rest of schema here
+```
+
+```
+$ sapphire update user has name with first and last string required warning , …
+```
+
+#### Should output:
+
+```javascript
+// ... rest of schema here
+name: {
+  first: {
+    type: String,
+    required: [true, "user name first required"]
+   },
+    last: {
+      type: String,
+      required: [true, "user name first required"]
+   }
+},
+// ... rest of schema here
+```
+
+## Alternative technologies support: PostgreSQL, Restify, Fastify and more.
+
+### Very, VERY far down into the future
+
+Only once the core tech has been built and tested around Express Mongoose stack.
+
+
 ## License
 
 [MIT](LICENSE)
