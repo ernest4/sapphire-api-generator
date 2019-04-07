@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const { initFileCreators, generateFileCreators } = require("./lib/fileCreators");
-const dc = require("./lib/dirCreators");
+const directoryCreator = require("./lib/dirCreators");
 const fs = require("fs");
 const program = require("commander");
 var packageJSON = require("./package.json");
@@ -141,9 +141,9 @@ function* init(app_name, options, sapphireVersion) {
     yield `creating directories:
     `;
 
-    for (const dir of dirs) yield dc.apiDirCreator(app_name, version, dir);
-    yield dc.dirCreator(`${app_name}/api/shared/middleware`);
-    yield dc.dirCreator(`${app_name}/_utils`);
+    for (const dir of dirs) yield directoryCreator.createApiDir(app_name, version, dir);
+    yield directoryCreator.createDir(`${app_name}/api/shared/middleware`);
+    yield directoryCreator.createDir(`${app_name}/_utils`);
 
     yield `
        creating files:
