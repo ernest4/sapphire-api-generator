@@ -22,6 +22,16 @@ program
   .option("-H, --heroku", "add a Heroku Procfile for deploying to Heroku")
   .option("-a, --auth", "add authorization of routes")
   .option("-l, --logging", "add logging middleware")
+  .option(
+    "-i, --inline",
+    `generate the models within model.js file instead of separate schema.json
+
+               WARNING: if you inline you will not be able to use Sapphire update command
+               to update models' fields and/or create relations between models. If you
+               inline, it is now your responsibility to maintain the model schema and any
+               relations.
+               `
+  )
   .action((app_name, options) => {
     let initGenerator = init(app_name, options, SAPPHIRE_VERSION);
 
@@ -47,6 +57,24 @@ program
       if (iteration.value) console.log(`       ${iteration.value}`);
     }
   });
+
+// program
+//   .command("delete <asset>")
+//   .alias("g")
+//   .description("delete a database backed asset from your RESTlike api")
+//   .option("--apiv <version>", "specify the api version under which to delete the asset")
+//   .option("-m, --model", "only delete a model for this asset")
+//   .action((asset, options) => {
+//     let deleteGenerator = deleteAsset(asset, options);
+
+//     for (
+//       let iteration = deleteGenerator.next();
+//       !iteration.done;
+//       iteration = deleteGenerator.next()
+//     ) {
+//       if (iteration.value) console.log(`       ${iteration.value}`);
+//     }
+//   });
 
 program
   .command("seed <asset>")
@@ -198,6 +226,10 @@ function* generate(asset, options) {
     console.log(errMessage(err));
     process.exit(1);
   }
+}
+
+function* deleteAsset(asset, options) {
+  return "deleting...";
 }
 
 function* seed(asset, options) {
