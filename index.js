@@ -185,12 +185,12 @@ function* generate(asset, options) {
 
     yield `
        Endpoints:
-       GET:    ${options.apiv}/${asset}
-       POST:   ${options.apiv}/${asset}
+       GET:    /api/v${options.apiv}/${asset}
+       POST:   /api/v${options.apiv}/${asset}
 
-       GET:    ${options.apiv}/${asset}/:${asset}Id
-       PUT:    ${options.apiv}/${asset}/:${asset}Id
-       DELETE: ${options.apiv}/${asset}/:${asset}Id
+       GET:    /api/v${options.apiv}/${asset}/:${asset}Id
+       PUT:    /api/v${options.apiv}/${asset}/:${asset}Id
+       DELETE: /api/v${options.apiv}/${asset}/:${asset}Id
     `;
 
     return;
