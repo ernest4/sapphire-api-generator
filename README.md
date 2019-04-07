@@ -123,7 +123,6 @@ This generator can also be further configured with the following command line fl
       --no-readme    don't add a README.md
       --no-ping      don't add the /ping route for checking API status
       -H, --heroku   add a Heroku Procfile for deploying to Heroku
-      -a, --auth     add authorization of routes
       -l, --logging  add logging middleware
       -i, --inline   generate the models within model.js file instead of separate schema.json
 
@@ -143,6 +142,7 @@ This generator can also be further configured with the following command line fl
     Options:
       --apiv <version>  specify the api version under which to create the asset
       -m, --model       only generate a model for this asset
+      -a, --auth        add authorization of routes
       -h, --help        output usage information
       
  #### I want to seed an asset in my database (WIP. COMING SOON):
