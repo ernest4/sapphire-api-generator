@@ -20,7 +20,6 @@ program
   .option("--no-readme", "don't add a README.md")
   .option("--no-ping", "don't add the /ping route for checking API status")
   .option("-H, --heroku", "add a Heroku Procfile for deploying to Heroku")
-  .option("-a, --auth", "add authorization of routes")
   .option("-l, --logging", "add logging middleware")
   .option(
     "-i, --inline",
@@ -46,6 +45,7 @@ program
   .description("generate a database backed asset for your RESTlike api")
   .option("--apiv <version>", "specify the api version under which to create the asset")
   .option("-m, --model", "only generate a model for this asset")
+  .option("-a, --auth", "add authorization of routes")
   .action((asset, options) => {
     let generateGenerator = generate(asset, options);
 
@@ -198,10 +198,15 @@ function* generate(asset, options) {
   const version = options.apiv || 1;
   options.apiv = version;
 
+  const dirs = ["controllers", "models", "routes", "services"];
+
   try {
     yield `
     generating asset "${asset}":
    `;
+
+    if (options.apiv > 1)
+      for (const dir of dirs) yield directoryCreator.createApiDir(null, version, dir);
 
     for (const fileCreator of generateFileCreators) yield fileCreator(asset, options);
 
