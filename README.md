@@ -125,6 +125,13 @@ This generator can also be further configured with the following command line fl
       -H, --heroku   add a Heroku Procfile for deploying to Heroku
       -a, --auth     add authorization of routes
       -l, --logging  add logging middleware
+      -i, --inline   generate the models within model.js file instead of separate schema.json
+
+                     WARNING: if you inline you will not be able to use Sapphire update command
+                     to update models' fields and/or create relations between models. If you
+                     inline, it is now your responsibility to maintain the model schema and any
+                     relations.
+
       -h, --help     output usage information
       
  #### I want to add a new asset to my sapphire project:
@@ -175,6 +182,17 @@ This generator can also be further configured with the following command line fl
     Options:
       -r, --rest  generate the routes, controller and services for existing model of asset
       -h, --help  output usage information
+      
+#### I want to delete an existing asset from my sapphire project:
+
+    Usage: delete|g [options] <asset>
+
+    delete a database backed asset from your RESTlike api
+
+    Options:
+      --apiv <version>  specify the api version under which to delete the asset
+      -m, --model       only delete a model for this asset
+      -h, --help        output usage information
       
 #### I want a complete example (WIP. COMING SOON):
 
