@@ -230,7 +230,7 @@ The vision is to be able to intuitively describe the asset and it’s fields, in
 $ sapphire update user has name with first and last string required warning 'Enter User name' , has birthday date , has gender string enum possible male or female or other default other , has socialId string required warning 'User must have unique social ID' unique , has createdDate date default now , has many hobby
 ```
 
-#### Should output (*NOTE: this is end object that mongoose will understand, the schemas in Sapphire will be stored in JSON and loaded in when server starts*):
+#### Should output (*NOTE: this is end object that mongoose will understand, the schemas in Sapphire will be stored in JSON and loaded in when server starts, unless the models are inlined*):
 
 ```javascript
 let UserSchema = new mongoose.Schema(
