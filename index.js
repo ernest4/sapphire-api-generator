@@ -2,12 +2,13 @@
 
 const { initFileCreators, generateFileCreators } = require("./lib/fileCreators");
 const dc = require("./lib/dirCreators");
-// const fs = require("fs");
+const fs = require("fs");
 const program = require("commander");
+var packageJSON = require("./package.json");
 
-const VERSION = "0.1.0"; // TODO: read this from package.json
+const SAPPHIRE_VERSION = packageJSON.version;
 
-program.version(`${VERSION}`);
+program.version(`${SAPPHIRE_VERSION}`);
 
 program
   .command("init <app_name>")
@@ -22,7 +23,7 @@ program
   .option("-a, --auth", "add authorization of routes")
   .option("-l, --logging", "add logging middleware")
   .action((app_name, options) => {
-    let initGenerator = init(app_name, options);
+    let initGenerator = init(app_name, options, SAPPHIRE_VERSION);
 
     for (let iteration = initGenerator.next(); !iteration.done; iteration = initGenerator.next()) {
       if (iteration.value) console.log(`       ${iteration.value}`);
@@ -126,7 +127,7 @@ program
 
 program.parse(process.argv);
 
-function* init(app_name, options) {
+function* init(app_name, options, sapphireVersion) {
   const version = 1;
   const dirs = ["controllers", "models", "routes", "services"];
 
@@ -148,10 +149,11 @@ function* init(app_name, options) {
        creating files:
     `;
 
-    for (const fileCreator of initFileCreators) yield fileCreator(app_name, options);
+    for (const fileCreator of initFileCreators)
+      yield fileCreator(app_name, options, sapphireVersion);
 
     yield `
-       success!:
+       success!
 
        $ cd ${app_name}
        $ npm run nodemon
@@ -165,7 +167,7 @@ function* init(app_name, options) {
 }
 
 function* generate(asset, options) {
-  const version = `/api/v${options.apiv || 1}`;
+  const version = options.apiv || 1;
   options.apiv = version;
 
   try {
@@ -176,15 +178,19 @@ function* generate(asset, options) {
     for (const fileCreator of generateFileCreators) yield fileCreator(asset, options);
 
     yield `
-       success!:
+       success!
+    `;
 
+    if (options.model) return;
+
+    yield `
        Endpoints:
-       GET:    ${version}/${asset}
-       POST:   ${version}/${asset}
+       GET:    ${options.apiv}/${asset}
+       POST:   ${options.apiv}/${asset}
 
-       GET:    ${version}/${asset}/:${asset}Id
-       PUT:    ${version}/${asset}/:${asset}Id
-       DELETE: ${version}/${asset}/:${asset}Id
+       GET:    ${options.apiv}/${asset}/:${asset}Id
+       PUT:    ${options.apiv}/${asset}/:${asset}Id
+       DELETE: ${options.apiv}/${asset}/:${asset}Id
     `;
 
     return;
