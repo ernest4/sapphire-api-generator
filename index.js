@@ -184,6 +184,7 @@ function* init(app_name, options, sapphireVersion) {
        success!
 
        $ cd ${app_name}
+       $ npm install
        $ npm run nodemon
     `;
 
