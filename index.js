@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const { initFileCreators, generateFileCreators } = require("./lib/fileCreators");
-const directoryCreator = require("./lib/dirCreators");
+const { initFileCreators, generateFileCreators } = require("./lib/fileCreators/fileCreators");
+const directoryCreator = require("./lib/dirCreators/dirCreators");
 const fs = require("fs");
 const program = require("commander");
 var packageJSON = require("./package.json");
