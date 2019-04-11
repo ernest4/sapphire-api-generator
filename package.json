@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/ernest4/sapphire-api-generator#readme",
   "dependencies": {
-    "commander": "^2.19.0"
+    "commander": "^2.19.0",
+    "inquirer": "^6.2.2"
   }
 }

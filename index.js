@@ -4,6 +4,7 @@ const { initFileCreators, generateFileCreators } = require("./lib/fileCreators/f
 const directoryCreator = require("./lib/dirCreators/dirCreators");
 const fs = require("fs");
 const program = require("commander");
+const inquirer = require("inquirer");
 var packageJSON = require("./package.json");
 
 const SAPPHIRE_VERSION = packageJSON.version;
@@ -11,11 +12,18 @@ const SAPPHIRE_VERSION = packageJSON.version;
 program.version(`${SAPPHIRE_VERSION}`);
 
 program
-  .command("init <app_name>")
+  .command("init [app_name]")
   .alias("i")
-  .description("initialize the base structure of your api")
+  .description(
+    `
+  initialize the base structure of your api:
+
+  NOTE: you may run 'sapphire init' command with or without arguments.
+  Without arguments an interactive session will be launched to guide you.
+  `
+  )
   .option("--no-git", "don't add a git repo")
-  .option("--no-intro", "don't add the _intro.txt files which explain the directories")
+  .option("--no-intro", "don't add the README.txt files which explain the directories")
   .option("--no-security", "don't add security middleware")
   .option("--no-readme", "don't add a README.md")
   .option("--no-ping", "don't add the /ping route for checking API status")
@@ -31,11 +39,67 @@ program
                relations.
                `
   )
-  .action((app_name, options) => {
-    let initGenerator = init(app_name, options, SAPPHIRE_VERSION);
+  .action(async (app_name, options) => {
+    if (!app_name) {
+      const questions = [
+        {
+          type: "confirm",
+          name: "git",
+          message: "Add and init a git repo?",
+          default: true
+        },
+        {
+          type: "confirm",
+          name: "intro",
+          message: "Add the README.txt files which explain the directories?",
+          default: true
+        },
+        {
+          type: "confirm",
+          name: "security",
+          message: "Add security middleware?",
+          default: true
+        },
+        {
+          type: "confirm",
+          name: "readme",
+          message: "Add a README.md?",
+          default: true
+        },
+        {
+          type: "confirm",
+          name: "ping",
+          message: "Add the /ping route for checking API status?",
+          default: true
+        },
+        {
+          type: "confirm",
+          name: "heroku",
+          message: "Add a Heroku Procfile for deploying to Heroku?",
+          default: false
+        },
+        {
+          type: "confirm",
+          name: "logging",
+          message: "Add logging middleware?",
+          default: false
+        },
+        {
+          type: "input",
+          name: "app_name",
+          message: "Please enter the name of your api app:"
+        }
+      ];
 
-    for (let iteration = initGenerator.next(); !iteration.done; iteration = initGenerator.next()) {
-      if (iteration.value) console.log(`       ${iteration.value}`);
+      try {
+        const options = await inquirer.prompt(questions);
+        initializeAPI(options.app_name, options, SAPPHIRE_VERSION);
+      } catch (err) {
+        console.log(errMessage(err));
+        process.exit(1);
+      }
+    } else {
+      initializeAPI(app_name, options, SAPPHIRE_VERSION);
     }
   });
 
@@ -154,6 +218,14 @@ program
 //   });
 
 program.parse(process.argv);
+
+function initializeAPI(app_name, options, sapphireVersion) {
+  let initGenerator = init(app_name, options, sapphireVersion);
+
+  for (let iteration = initGenerator.next(); !iteration.done; iteration = initGenerator.next()) {
+    if (iteration.value) console.log(`       ${iteration.value}`);
+  }
+}
 
 function* init(app_name, options, sapphireVersion) {
   const version = 1;
