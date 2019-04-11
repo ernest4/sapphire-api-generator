@@ -146,7 +146,7 @@ This generator can also be further configured with the following command line fl
     generate a database backed asset for your RESTlike api
 
     Options:
-      --apiv <version>  specify the api version under which to create the asset
+      --apiv <version>  specify the api version under which to create the asset (WIP. COMING SOON)
       -m, --model       only generate a model for this asset
       -a, --auth        add authorization of routes
       -h, --help        output usage information
