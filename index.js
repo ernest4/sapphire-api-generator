@@ -107,7 +107,7 @@ program
   .command("generate <asset>")
   .alias("g")
   .description("generate a database backed asset for your RESTlike api")
-  .option("--apiv <version>", "specify the api version under which to create the asset")
+  // (WIP. COMING SOON) .option("--apiv <version>", "specify the api version under which to create the asset")
   .option("-m, --model", "only generate a model for this asset")
   .option("-a, --auth", "add authorization of routes")
   .action((asset, options) => {
