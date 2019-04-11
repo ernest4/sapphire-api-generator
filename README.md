@@ -132,10 +132,11 @@ This generator can also be further configured with the following command line fl
       -l, --logging  add logging middleware
       -i, --inline   generate the models within model.js file instead of separate schema.json
 
-                     WARNING: if you inline you will not be able to use Sapphire update command
-                     to update models' fields and/or create relations between models. If you
-                     inline, it is now your responsibility to maintain the model schema and any
-                     relations.
+                     WARNING: if you inline you will not be able to use Sapphire
+                     update command to update models' fields and/or create relations
+                     between models as well as seed them with the seed command. If
+                     you inline, it is now your responsibility to maintain the model
+                     schema and any relations.
 
       -h, --help     output usage information
       
