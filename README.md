@@ -110,15 +110,21 @@ This generator can also be further configured with the following command line fl
       
 ### Use cases
 #### I want to create a new sapphire project:
-![Alt Text](https://media.giphy.com/media/Urslb7oSSeRpRKs8MW/giphy.gif)
+*NOTE: you may use the command line directly with params (left) or launch an interactive session (right).*
+![Alt Text](https://media.giphy.com/media/llONu0r5u4pKkEutxC/giphy.gif)
+![Alt Text](https://media.giphy.com/media/lT9fOcP6wusCp8l3aJ/giphy.gif)
 
-    Usage: init|i [options] <app_name>
+    Usage: init|i [options] [app_name]
 
-    initialize the base structure of your api
+      initialize the base structure of your api:
+
+      NOTE: you may run 'sapphire init' command with or without arguments.
+      Without arguments an interactive session will be launched to guide you.
+
 
     Options:
       --no-git       don't add a git repo
-      --no-intro     don't add the _intro.txt files which explain the directories
+      --no-intro     don't add the README.txt files which explain the directories
       --no-security  don't add security middleware
       --no-readme    don't add a README.md
       --no-ping      don't add the /ping route for checking API status
