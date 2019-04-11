@@ -258,6 +258,7 @@ function* init(app_name, options, sapphireVersion) {
 
        $ cd ${app_name}
        $ npm install
+       $ sapphire generate my_first_asset
        $ npm run nodemon
     `;
 
