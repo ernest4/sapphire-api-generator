@@ -230,7 +230,8 @@ function initializeAPI(app_name, options, sapphireVersion) {
 
 function* init(app_name, options, sapphireVersion) {
   const version = 1;
-  const dirs = ["controllers", "models", "routes", "services"];
+  const apiDirs = ["controllers", "models", "routes", "services"];
+  const testDirs = ["custom", "generated"];
 
   try {
     yield `
@@ -242,9 +243,12 @@ function* init(app_name, options, sapphireVersion) {
     yield `creating directories:
     `;
 
-    for (const dir of dirs) yield directoryCreator.createApiDir(app_name, version, dir);
+    for (const dir of apiDirs) yield directoryCreator.createApiDir(app_name, version, dir);
     yield directoryCreator.createDir(`${app_name}/api/shared/middleware`);
     yield directoryCreator.createDir(`${app_name}/_utils`);
+    for (const dir of testDirs) yield directoryCreator.createTestDir(app_name, version, dir);
+    yield directoryCreator.createDir(`${app_name}/tests/unit`);
+    yield directoryCreator.createDir(`${app_name}/config`);
 
     yield `
        creating files:
@@ -259,6 +263,7 @@ function* init(app_name, options, sapphireVersion) {
        $ cd ${app_name}
        $ npm install
        $ sapphire generate my_first_asset
+       $ npm run test
        $ npm run nodemon
     `;
 
@@ -273,15 +278,18 @@ function* generate(asset, options) {
   const version = options.apiv || 1;
   options.apiv = version;
 
-  const dirs = ["controllers", "models", "routes", "services"];
+  const apiDirs = ["controllers", "models", "routes", "services"];
+  const testDirs = ["custom", "generated"];
 
   try {
     yield `
     generating asset "${asset}":
    `;
 
-    if (options.apiv > 1)
-      for (const dir of dirs) yield directoryCreator.createApiDir(null, version, dir);
+    if (options.apiv > 1) {
+      for (const dir of apiDirs) yield directoryCreator.createApiDir(null, version, dir);
+      for (const dir of testDirs) yield directoryCreator.createTestDir(null, version, dir);
+    }
 
     for (const fileCreator of generateFileCreators) yield fileCreator(asset, options);
 
