@@ -80,7 +80,13 @@ Generate the first **asset**:
 $ sapphire generate user
 ```
 
-Generate **100 dummy users** for testing:
+Run the tests:
+
+```bash
+$ npm run test
+```
+
+Generate **100 dummy users** for live manual testing and mocking model data:
 
 ```bash
 $ sapphire seed user --count 100
