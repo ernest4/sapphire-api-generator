@@ -160,7 +160,7 @@ This generator can also be further configured with the following command line fl
       
  #### I want to seed an asset in my database (WIP. COMING SOON):
  
-    Usage: seed|s [options] <asset>
+    Usage: seed|s [options] [asset]
 
     generate dummy data for chosen asset
 
