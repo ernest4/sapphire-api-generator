@@ -142,7 +142,7 @@ program
 //   });
 
 program
-  .command("seed <asset>")
+  .command("seed [asset]")
   .alias("s")
   .description("generate dummy data for chosen asset")
   .option("-c, --count <count>", "specify the number of instances of the asset")
