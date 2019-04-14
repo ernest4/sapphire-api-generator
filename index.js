@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 
-const { initFileCreators, generateFileCreators } = require("./lib/fileCreators/fileCreators");
+const {
+  initFileCreators,
+  generateFileCreators,
+  createGeneratedTestFileSync
+} = require("./lib/fileCreators/fileCreators");
 const directoryCreator = require("./lib/dirCreators/dirCreators");
 const fs = require("fs");
 const program = require("commander");
@@ -164,7 +168,8 @@ program
 program
   .command("update <asset> [args...]")
   .alias("u")
-  // (WIP) .option("-r, --rest", "generate the routes, controller and services for existing model of asset")
+  // (WIP. COMING SOON) .option("-r, --rest", "generate the routes, controller and services for existing model of asset")
+  .option("--apiv <version>", "specify the api version under which to create the asset")
   .description(
     `change the asset's model, add relationships to other models and generate
 tests:
@@ -196,7 +201,7 @@ tests:
        $ sapphire update tests all
   `
   )
-  .action((asset, args) => {
+  .action((asset, args, options) => {
     // console.log(asset);
     // console.log(args);
     if (asset === "tests") {
@@ -208,14 +213,14 @@ tests:
       } else {
         args.forEach(asset => {
           console.log(`generating tests for ${asset}`);
-          generateTests(asset);
+          generateTests(asset, options);
         });
       }
     } else {
       console.log(`updating asset ${asset}`);
       updateAssetModel(asset, args);
       console.log(`generating tests for ${asset}`);
-      generateTests(asset);
+      generateTests(asset, options);
     }
 
     console.log(`done`);
@@ -367,13 +372,19 @@ function updateAssetModel(asset, args) {
   // save object as json
 }
 
-function generateTests(asset) {
-  console.log("generating tests for asset model");
-  console.log(asset);
-  // load the model json into object
-  // parse the fields
-  // apply the commands to object
-  // send object to createGeneratedTestFileSync file creator
+function generateTests(asset, opts) {
+  try {
+    const modelJSON = fs.readFileSync(`./api/v1/models/${asset}/${asset}.schema.json`);
+    let modelObject = JSON.parse(modelJSON);
+
+    let options = {};
+    options.auth = modelObject.auth.default;
+    options.apiv = opts.apiv || 1;
+
+    createGeneratedTestFileSync(asset, options, modelObject);
+  } catch (err) {
+    throw new Error(err);
+  }
 }
 
 function errMessage(err) {
