@@ -160,37 +160,66 @@ program
     console.log(seed(asset, options));
   });
 
-// // TODO: implement in the future
-// program
-//   .command("update <asset> [args...]")
-//   .alias("u")
-//   .option("-r, --rest", "generate the routes, controller and services for existing model of asset")
-//   .description(
-//     `change the asset's model or add relationships to other models:
+// TODO: implement in the future
+program
+  .command("update <asset> [args...]")
+  .alias("u")
+  // (WIP) .option("-r, --rest", "generate the routes, controller and services for existing model of asset")
+  .description(
+    `change the asset's model, add relationships to other models and generate
+tests:
 
-//   RELATIONSHIP: [one to many]: asset1 has many asset2
+     EXAMPLE 1: change the asset's model, add relationships to other models
 
-//     EXAMPLE 1: one author has many books.
+       $ sapphire update user name:object , name.first:string required:’Enter
+         User name’ , name.last:string required:’Enter User name’ , birthday:date
+           , gender:string enum:[‘male’, ‘female’, ‘other’] default:’other’ , 
+         socialId:string required:’User must have unique social ID’ unique , 
+         createDate:date default:now , user:1m:hobby
 
-//     $ sapphire update author has many book
 
-//   RELATIONSHIP: [many to many]: asset1 many to many asset2
+     EXAMPLE 2: generate tests for the given asset after you modified its JSON
+     schema
 
-//     EXAMPLE 2: An editor has worked on many articles and an article can have many editors.
+       $ sapphire update tests user
 
-//     $ sapphire update editor many to many article
 
-//     EXAMPLE 3: alternatively, you may define relationships one by one.
+     EXAMPLE 3: generate tests for the given assets after you modified their JSON
+     schema
 
-//     $ sapphire update editor has many article
-//     $ sapphire update article has many editor
-//   `
-//   )
-//   .action((asset, args) => {
-//     // TODO: implement in the future
-//     console.log(asset);
-//     console.log(args);
-//   });
+       $ sapphire update tests user book library
+
+
+     EXAMPLE 4: generate tests for all assets after you modified their JSON
+     schema (this will regenerate all the tests from scratch)
+
+       $ sapphire update tests all
+  `
+  )
+  .action((asset, args) => {
+    // console.log(asset);
+    // console.log(args);
+    if (asset === "tests") {
+      // console.log(args);
+      if (args[0] === "all") {
+        console.log(`generating tests for all models`);
+        // TODO: read in all the files in models, use code similiar to all.models.js
+        // and call generateTest(model); on each.
+      } else {
+        args.forEach(asset => {
+          console.log(`generating tests for ${asset}`);
+          generateTests(asset);
+        });
+      }
+    } else {
+      console.log(`updating asset ${asset}`);
+      updateAssetModel(asset, args);
+      console.log(`generating tests for ${asset}`);
+      generateTests(asset);
+    }
+
+    console.log(`done`);
+  });
 
 // // TODO: implement in the future
 // program
@@ -326,6 +355,25 @@ function* seed(asset, options) {
 
 function* update(asset, options) {
   return "updating...";
+}
+
+function updateAssetModel(asset, args) {
+  console.log("updateing asset model");
+  console.log(asset);
+  console.log(args);
+  // load the model json into object
+  // parse the commands
+  // apply the commands to object
+  // save object as json
+}
+
+function generateTests(asset) {
+  console.log("generating tests for asset model");
+  console.log(asset);
+  // load the model json into object
+  // parse the fields
+  // apply the commands to object
+  // send object to createGeneratedTestFileSync file creator
 }
 
 function errMessage(err) {
