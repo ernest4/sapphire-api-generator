@@ -203,7 +203,7 @@ This generator can also be further configured with the following command line fl
     delete a database backed asset from your RESTlike api
 
     Options:
-      --apiv <version>  specify the api version under which to delete the asset
+      --apiv <version>  specify the api version under which to delete the asset (WIP. COMING SOON)
       -m, --model       only delete a model for this asset
       -h, --help        output usage information
       
