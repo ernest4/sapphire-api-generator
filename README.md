@@ -2,8 +2,6 @@
 
 Node.js [Express](https://www.npmjs.com/package/express) REST*like* SOA*like* API generator for SPAs.
 
-Where Rails and Sails fails, Sapphire prevails!
-
 Convention over configuration? Why choose?! Welcome to the configurable convention!
 
 * If Rails is too constrictive but Express is too open ended then this is the framework for you.
