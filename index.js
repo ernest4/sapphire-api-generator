@@ -151,6 +151,7 @@ program
   .description("generate dummy data for chosen asset")
   .option("-c, --count <count>", "specify the number of instances of the asset")
   .action((asset, options) => {
+    checkIsInline();
     const count = options.count || 10;
 
     console.log(
@@ -202,6 +203,7 @@ tests:
   `
   )
   .action((asset, args, options) => {
+    checkIsInline();
     // console.log(asset);
     // console.log(args);
     if (asset === "tests") {
@@ -398,4 +400,24 @@ function errMessage(err) {
 
        ISSUE: ${err.message}
 `;
+}
+
+function checkIsInline() {
+  try {
+    const sapphireJSON = fs.readFileSync(`./sapphire.json`);
+    const inline = JSON.parse(sapphireJSON).inline;
+
+    if (inline) {
+      console.log(`
+      FAILED: the models are inlined.
+      
+      As the models are inlined, you will not be able to use Sapphire
+      update command to update models' fields and/or create relations
+      between models as well as seed them with the seed command.
+      `);
+      process.exit(1);
+    }
+  } catch (err) {
+    throw new Error(err);
+  }
 }
