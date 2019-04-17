@@ -393,8 +393,7 @@ function generateTests(asset, opts) {
 
     createGeneratedTestFileSync(asset, options, modelObject);
   } catch (err) {
-    // throw new Error(err);
-    throw err;
+    throw err; // rethrow
   }
 }
 
