@@ -215,14 +215,22 @@ tests:
       } else {
         args.forEach(asset => {
           console.log(`generating tests for ${asset}`);
-          generateTests(asset, options);
+          try {
+            generateTests(asset, options);
+          } catch (err) {
+            handleGenerateTestsError(err);
+          }
         });
       }
     } else {
       console.log(`updating asset ${asset}`);
       updateAssetModel(asset, args);
       console.log(`generating tests for ${asset}`);
-      generateTests(asset, options);
+      try {
+        generateTests(asset, options);
+      } catch (err) {
+        handleGenerateTestsError(err);
+      }
     }
 
     console.log(`done`);
@@ -385,7 +393,8 @@ function generateTests(asset, opts) {
 
     createGeneratedTestFileSync(asset, options, modelObject);
   } catch (err) {
-    throw new Error(err);
+    // throw new Error(err);
+    throw err;
   }
 }
 
@@ -419,5 +428,41 @@ function checkIsInline() {
     }
   } catch (err) {
     throw new Error(err);
+  }
+}
+
+function handleGenerateTestsError(err) {
+  console.log(err);
+  if (err.message.match(/unsupported_field_type/)) {
+    if (err.required) {
+      console.log(`
+  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  FAILED: Unrecognised or unsupported field type: ${err.type}
+  
+  Model: ${err.asset}
+  
+  As this field is marked as 'required' Sapphire cannot proceed with test
+  generation for this model. Please write custom tests for this model!
+  
+  NOTE: This field type may be supported in future version of Sapphire.
+  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+  `);
+    } else {
+      console.log(`
+  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  WARNING: Unrecognised or unsupported field type: ${err.type}
+  
+  Model: ${err.asset}
+  
+  As this field is not marked as 'required' Sapphire will proceed with test
+  generation for this model, but will NOT include this type in tests!
+  
+  If you want to test this type, please write custom tests for this model.
+  
+  NOTE: This field type may be supported in future version of Sapphire.
+  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  `);
+    }
   }
 }
