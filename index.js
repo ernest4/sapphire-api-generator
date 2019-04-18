@@ -447,21 +447,6 @@ function handleGenerateTestsError(err) {
   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
   `);
-    } else {
-      console.log(`
-  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  WARNING: Unrecognised or unsupported field type: ${err.type}
-  
-  Model: ${err.asset}
-  
-  As this field is not marked as 'required' Sapphire will proceed with test
-  generation for this model, but will NOT include this type in tests!
-  
-  If you want to test this type, please write custom tests for this model.
-  
-  NOTE: This field type may be supported in future version of Sapphire.
-  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-  `);
     }
   }
 }
