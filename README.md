@@ -160,20 +160,34 @@ This generator can also be further configured with the following command line fl
  
     Usage: seed|s [options] [asset]
 
-    generate dummy data for chosen asset
+    generate dummy data for chosen asset(s):
+
+         EXAMPLE 1: generate dummy data for single asset
+
+           $ sapphire seed user
+
+
+         EXAMPLE 2: generate dummy data for multiple assets
+
+           $ sapphire seed user book library
+
+
+         EXAMPLE 3: generate dummy data for all assets
+
+           $ sapphire seed all
 
     Options:
       -c, --count <count>  specify the number of instances of the asset
       -h, --help           output usage information
       
- #### I want to update an existing assets model (WIP. COMING SOON):
+ #### I want to update an existing assets model:
  
     Usage: update|u [options] <asset> [args...]
 
     change the asset's model, add relationships to other models and generate
     tests:
 
-         EXAMPLE 1: change the asset's model, add relationships to other models
+         EXAMPLE 1: change the asset's model, add relationships to other models (WIP. COMING SOON)
 
            $ sapphire update user name:object , name.first:string required:’Enter
              User name’ , name.last:string required:’Enter User name’ , birthday:date
@@ -212,7 +226,6 @@ This generator can also be further configured with the following command line fl
 
     Options:
       --apiv <version>  specify the api version under which to delete the asset (WIP. COMING SOON)
-      -m, --model       only delete a model for this asset
       -h, --help        output usage information
       
 #### I want a complete example (WIP. COMING SOON):
