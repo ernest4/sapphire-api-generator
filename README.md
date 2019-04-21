@@ -160,7 +160,21 @@ This generator can also be further configured with the following command line fl
  
     Usage: seed|s [options] [asset]
 
-    generate dummy data for chosen asset
+    generate dummy data for chosen asset(s):
+
+     EXAMPLE 1: generate dummy data for single asset
+
+       $ sapphire seed user
+
+
+     EXAMPLE 2: generate dummy data for multiple assets
+
+       $ sapphire seed user book library
+
+
+     EXAMPLE 3: generate dummy data for all assets
+
+       $ sapphire seed all
 
     Options:
       -c, --count <count>  specify the number of instances of the asset
