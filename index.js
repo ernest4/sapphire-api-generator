@@ -183,7 +183,7 @@ program
             if (file.match(/.model.js/)) {
               let asset = file.replace(/.model.js/, "");
               console.log(`      seeding ${asset}`);
-              let subPath = `${subdir}/${file}`;
+              let subPath = `${subdir}/${file}`.replace(/.js/, "");
               seed(asset, options, subPath);
             }
           });
