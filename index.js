@@ -209,9 +209,21 @@ tests:
     if (asset === "tests") {
       // console.log(args);
       if (args[0] === "all") {
-        console.log(`generating tests for all models`);
-        // TODO: read in all the files in models, use code similiar to all.models.js
-        // and call generateTest(model); on each.
+        const apiv = options.apiv || 1;
+        const dir = `./api/v${apiv}/models/`;
+
+        // JSON backed schema
+        fs.readdirSync(dir).forEach(subdir => {
+          if (subdir !== "all.models.js" && !subdir.match(/.txt/)) {
+            fs.readdirSync(`${dir}${subdir}`).forEach(file => {
+              if (file.match(/.schema.json/)) {
+                let asset = file.replace(/.schema.json/, "");
+                console.log(`generating tests for ${asset}`);
+                generateTests(asset, options);
+              }
+            });
+          }
+        });
       } else {
         args.forEach(asset => {
           console.log(`generating tests for ${asset}`);
