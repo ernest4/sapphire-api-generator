@@ -133,7 +133,6 @@ program
   .alias("d")
   .description("delete a database backed asset from your RESTlike api")
   //(WIP. COMMING SOON) .option("--apiv <version>", "specify the api version under which to delete the asset")
-  .option("-m, --model", "only delete a model for this asset")
   .action((asset, options) => {
     deleteAsset(asset, options);
   });
