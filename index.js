@@ -7,6 +7,7 @@ const {
 } = require("./lib/fileCreators/fileCreators");
 const directoryCreator = require("./lib/dirCreators/dirCreators");
 const { deleteAssetFilesSync } = require("./lib/fileRemovers");
+const { seed } = require("./lib/seed/seed");
 const fs = require("fs");
 const program = require("commander");
 const inquirer = require("inquirer");
@@ -138,23 +139,72 @@ program
   });
 
 program
-  .command("seed [asset]")
+  .command("seed <asset> [assets...]")
   .alias("s")
-  .description("generate dummy data for chosen asset")
+  .description(
+    `generate dummy data for chosen asset(s): 
+  
+     EXAMPLE 1: generate dummy data for single asset
+
+       $ sapphire seed user
+
+
+     EXAMPLE 2: generate dummy data for multiple assets
+
+       $ sapphire seed user book library
+
+
+     EXAMPLE 3: generate dummy data for all assets
+
+       $ sapphire seed all
+    `
+  )
   .option("-c, --count <count>", "specify the number of instances of the asset")
-  .action((asset, options) => {
+  .option("--apiv <version>", "specify the api version under which to seed the asset")
+  .action((asset, args, options) => {
     checkIsInline();
-    const count = options.count || 10;
+    options.count = options.count || 10;
+    options.apiv = options.apiv || 1;
+    let status = "";
 
     console.log(
       `
       seeding asset "${asset}":
-      count: ${count}
-      
+      count: ${options.count}
       `
     );
 
-    console.log(seed(asset, options));
+    if (asset === "all") {
+      const dir = `./api/v${options.apiv}/models/`;
+
+      // JSON backed schema
+      fs.readdirSync(dir).forEach(subdir => {
+        if (subdir !== "all.models.js" && !subdir.match(/.txt/)) {
+          fs.readdirSync(`${dir}${subdir}`).forEach(file => {
+            if (file.match(/.model.js/)) {
+              let asset = file.replace(/.model.js/, "");
+              console.log(`seeding ${asset}`);
+              let subPath = `${subdir}/${file}`;
+              console.log(subPath);
+              status += seed(asset, options, subPath);
+            }
+          });
+        }
+      });
+    } else {
+      args.forEach(asset => {
+        console.log(`seeding ${asset}`);
+        try {
+          let subPath = `${asset}/${asset}.model`;
+          status += seed(asset, options, subPath);
+        } catch (err) {
+          // handleGenerateTestsError(err);
+          console.log(`failed to seed ${asset}`);
+        }
+      });
+    }
+
+    console.log(status);
   });
 
 // TODO: implement in the future
@@ -162,7 +212,7 @@ program
   .command("update <asset> [args...]")
   .alias("u")
   // (WIP. COMING SOON) .option("-r, --rest", "generate the routes, controller and services for existing model of asset")
-  .option("--apiv <version>", "specify the api version under which to create the asset")
+  .option("--apiv <version>", "specify the api version under which to update the asset")
   .description(
     `change the asset's model, add relationships to other models and generate
 tests:
@@ -196,10 +246,7 @@ tests:
   )
   .action((asset, args, options) => {
     checkIsInline();
-    // console.log(asset);
-    // console.log(args);
     if (asset === "tests") {
-      // console.log(args);
       if (args[0] === "all") {
         const apiv = options.apiv || 1;
         const dir = `./api/v${apiv}/models/`;
@@ -372,10 +419,6 @@ function deleteAsset(asset, options) {
   let status = deleteAssetFilesSync(asset, options);
   console.log(status);
   return;
-}
-
-function* seed(asset, options) {
-  return "seeding...";
 }
 
 function* update(asset, options) {
