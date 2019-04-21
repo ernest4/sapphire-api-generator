@@ -6,6 +6,7 @@ const {
   createGeneratedTestFileSync
 } = require("./lib/fileCreators/fileCreators");
 const directoryCreator = require("./lib/dirCreators/dirCreators");
+const { deleteAssetFilesSync } = require("./lib/fileRemovers");
 const fs = require("fs");
 const program = require("commander");
 const inquirer = require("inquirer");
@@ -127,23 +128,15 @@ program
     }
   });
 
-// program
-//   .command("delete <asset>")
-//   .alias("g")
-//   .description("delete a database backed asset from your RESTlike api")
-//   .option("--apiv <version>", "specify the api version under which to delete the asset")
-//   .option("-m, --model", "only delete a model for this asset")
-//   .action((asset, options) => {
-//     let deleteGenerator = deleteAsset(asset, options);
-
-//     for (
-//       let iteration = deleteGenerator.next();
-//       !iteration.done;
-//       iteration = deleteGenerator.next()
-//     ) {
-//       if (iteration.value) console.log(`       ${iteration.value}`);
-//     }
-//   });
+program
+  .command("delete <asset>")
+  .alias("d")
+  .description("delete a database backed asset from your RESTlike api")
+  //(WIP. COMMING SOON) .option("--apiv <version>", "specify the api version under which to delete the asset")
+  .option("-m, --model", "only delete a model for this asset")
+  .action((asset, options) => {
+    deleteAsset(asset, options);
+  });
 
 program
   .command("seed [asset]")
@@ -372,8 +365,14 @@ function* generate(asset, options) {
   }
 }
 
-function* deleteAsset(asset, options) {
-  return "deleting...";
+function deleteAsset(asset, options) {
+  options.apiv = options.apiv || 1;
+  console.log(`
+     deleting asset ${asset}`);
+
+  let status = deleteAssetFilesSync(asset, options);
+  console.log(status);
+  return;
 }
 
 function* seed(asset, options) {
