@@ -165,7 +165,6 @@ program
     checkIsInline();
     options.count = options.count || 10;
     options.apiv = options.apiv || 1;
-    let status = "";
 
     console.log(
       `
@@ -183,28 +182,32 @@ program
           fs.readdirSync(`${dir}${subdir}`).forEach(file => {
             if (file.match(/.model.js/)) {
               let asset = file.replace(/.model.js/, "");
-              console.log(`seeding ${asset}`);
+              console.log(`      seeding ${asset}`);
               let subPath = `${subdir}/${file}`;
-              console.log(subPath);
-              status += seed(asset, options, subPath);
+              seed(asset, options, subPath);
             }
           });
         }
       });
     } else {
-      args.forEach(asset => {
-        console.log(`seeding ${asset}`);
-        try {
+      try {
+        console.log(`      seeding ${asset}`);
+        let subPath = `${asset}/${asset}.model`;
+        seed(asset, options, subPath);
+
+        args.forEach(asset => {
+          console.log(`      seeding ${asset}`);
           let subPath = `${asset}/${asset}.model`;
-          status += seed(asset, options, subPath);
-        } catch (err) {
-          // handleGenerateTestsError(err);
-          console.log(`failed to seed ${asset}`);
-        }
-      });
+          seed(asset, options, subPath);
+        });
+      } catch (err) {
+        // handleGenerateTestsError(err);
+        console.log(`failed to seed ${asset}`);
+      }
     }
 
-    console.log(status);
+    console.log(`
+      done`);
   });
 
 // TODO: implement in the future
