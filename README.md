@@ -166,14 +166,14 @@ This generator can also be further configured with the following command line fl
       -c, --count <count>  specify the number of instances of the asset
       -h, --help           output usage information
       
- #### I want to update an existing assets model (WIP. COMING SOON):
+ #### I want to update an existing assets model:
  
     Usage: update|u [options] <asset> [args...]
 
     change the asset's model, add relationships to other models and generate
     tests:
 
-         EXAMPLE 1: change the asset's model, add relationships to other models
+         EXAMPLE 1: change the asset's model, add relationships to other models (WIP. COMING SOON)
 
            $ sapphire update user name:object , name.first:string required:’Enter
              User name’ , name.last:string required:’Enter User name’ , birthday:date
