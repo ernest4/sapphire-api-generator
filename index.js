@@ -203,6 +203,7 @@ program
       } catch (err) {
         // handleGenerateTestsError(err);
         console.log(`failed to seed ${asset}`);
+        console.log(err);
       }
     }
 
