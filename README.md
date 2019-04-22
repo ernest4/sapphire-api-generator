@@ -158,7 +158,7 @@ This generator can also be further configured with the following command line fl
       
  #### I want to seed an asset in my database (WIP. COMING SOON):
  
-    Usage: seed|s [options] [asset]
+    Usage: seed|s [options] <asset> [assets...]
 
     generate dummy data for chosen asset(s):
 
@@ -167,14 +167,10 @@ This generator can also be further configured with the following command line fl
            $ sapphire seed user
 
 
-         EXAMPLE 2: generate dummy data for multiple assets
+         EXAMPLE 2: generate dummy data for single asset, define count
 
-           $ sapphire seed user book library
+           $ sapphire seed user --count 10000
 
-
-         EXAMPLE 3: generate dummy data for all assets
-
-           $ sapphire seed all
 
     Options:
       -c, --count <count>  specify the number of instances of the asset
