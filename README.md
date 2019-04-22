@@ -64,14 +64,6 @@ $ mongod --config /usr/local/etc/mongod.conf
 $ sudo service mongod start
 ```
 
-Start your **Express.js app** at `http://localhost:3001/`:
-
-```bash
-$ npm run nodemon
-```
-
-You can go to (GET) `http://localhost:3001/ping` to check if the api is working.
-
 Generate the first **asset**:
 
 ```bash
@@ -90,7 +82,15 @@ Generate **100 dummy users** for live manual testing and mocking model data:
 $ sapphire seed user --count 100
 ```
 
-You can go to `http://localhost:3001/api/v1/user` to check if the api is working and **get all users**.
+Start your **Express.js app** at `http://localhost:3001/`:
+
+```bash
+$ npm run nodemon
+```
+
+You can go to `http://localhost:3001/ping` to check if the api is working.
+
+You can go to `http://localhost:3001/api/v1/user` to **get all users**.
 
 
 ## Command Line Options
@@ -156,7 +156,7 @@ This generator can also be further configured with the following command line fl
       -a, --auth        add authorization of routes
       -h, --help        output usage information
       
- #### I want to seed an asset in my database (WIP. COMING SOON):
+ #### I want to seed an asset in my database:
  
     Usage: seed|s [options] <asset> [assets...]
 
