@@ -282,11 +282,11 @@ tests:
   )
   .action((asset, args, options) => {
     checkIsInline();
+    const apiv = options.apiv || 1;
+    const dir = `./api/v${apiv}/models/`;
+
     if (asset === "tests") {
       if (args[0] === "all") {
-        const apiv = options.apiv || 1;
-        const dir = `./api/v${apiv}/models/`;
-
         // JSON backed schema
         fs.readdirSync(dir).forEach(subdir => {
           if (subdir !== "all.models.js" && !subdir.match(/.txt/)) {
@@ -311,9 +311,9 @@ tests:
       }
     } else {
       console.log(`updating asset ${asset}`);
-      updateAssetModel(asset, args);
-      console.log(`generating tests for ${asset}`);
+      updateAssetModel(asset, args, dir);
       try {
+        console.log(`generating tests for ${asset}`);
         generateTests(asset, options);
       } catch (err) {
         handleGenerateTestsError(err);
@@ -461,14 +461,74 @@ function* update(asset, options) {
   return "updating...";
 }
 
-function updateAssetModel(asset, args) {
-  console.log("updateing asset model");
+function updateAssetModel(asset, args, dir) {
+  console.log("in updateAssetModel");
   console.log(asset);
+  console.log(`
+  instructions
+  `);
   console.log(args);
+  console.log(`
+  dir
+  `);
+  console.log(`${dir}${asset}/${asset}.schema.json`);
+
+  const schemaFilePath = `${dir}${asset}/${asset}.schema.json`;
+  let schemaJSONSource = "";
+  let schemaObject = {};
+
+  try {
+    schemaJSONSource = fs.readFileSync(schemaFilePath);
+    schemaObject = JSON.parse(schemaJSONSource);
+
+    modifyFields(schemaObject, args);
+
+    schemaJSONSource = JSON.stringify(schemaObject, null, 2);
+    fs.writeFileSync(schemaFilePath, schemaJSONSource);
+
+    return;
+  } catch (err) {
+    throw err;
+  }
   // load the model json into object
   // parse the commands
   // apply the commands to object
   // save object as json
+}
+
+function modifyFields(schemaObject, instructions) {
+  let instructionSet = {};
+  let lastEditedField = null;
+  for (let i = 0; i < instructions.length; i++) {
+    instructionSet = processInstruction(instructions[i], lastEditedField);
+
+    lastEditedField = instructionSet.lastEditedField;
+
+    if (instructionSet.field === ",") continue; // field definitions are comma separated
+
+    schemaObject[instructionSet.field] = instructionSet.body;
+  }
+  return;
+}
+
+function processInstruction(instruction, lastEditedField) {
+  if (instruction === ",") return { field: ",", lastEditedField: "," };
+  
+  let instructionSet = {};
+
+  let keyValueArray = parse(instruction);
+
+  for (const keyValue of keyValueArray) {
+    instructionSet.field = keyValue[0];
+    instructionSet.body = keyValue[1];
+  }
+
+  // instructionSet.lastEditedField = ???
+
+  // instructionSet.field = "living";
+  // instructionSet.body = { type: "Boolean", default: false };
+
+  return instructionSet;
 }
 
 function generateTests(asset, opts) {
