@@ -1,4 +1,4 @@
-# Sapphire
+# [Sapphire](https://github.com/ernest4/sapphire-api-generator/wiki)
 
 Node.js [Express](https://www.npmjs.com/package/express) REST*like* SOA*like* API generator for SPAs.
 
