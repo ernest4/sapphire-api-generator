@@ -1,4 +1,4 @@
-# Sapphire
+# [Sapphire](https://github.com/ernest4/sapphire-api-generator/wiki)
 
 Node.js [Express](https://www.npmjs.com/package/express) REST*like* SOA*like* API generator for SPAs.
 
@@ -64,14 +64,6 @@ $ mongod --config /usr/local/etc/mongod.conf
 $ sudo service mongod start
 ```
 
-Start your **Express.js app** at `http://localhost:3001/`:
-
-```bash
-$ npm run nodemon
-```
-
-You can go to (GET) `http://localhost:3001/ping` to check if the api is working.
-
 Generate the first **asset**:
 
 ```bash
@@ -90,7 +82,15 @@ Generate **100 dummy users** for live manual testing and mocking model data:
 $ sapphire seed user --count 100
 ```
 
-You can go to `http://localhost:3001/api/v1/user` to check if the api is working and **get all users**.
+Start your **Express.js app** at `http://localhost:3001/`:
+
+```bash
+$ npm run nodemon
+```
+
+You can go to `http://localhost:3001/ping` to check if the api is working.
+
+You can go to `http://localhost:3001/api/v1/user` to **get all users**.
 
 
 ## Command Line Options
@@ -156,9 +156,9 @@ This generator can also be further configured with the following command line fl
       -a, --auth        add authorization of routes
       -h, --help        output usage information
       
- #### I want to seed an asset in my database (WIP. COMING SOON):
+ #### I want to seed an asset in my database:
  
-    Usage: seed|s [options] [asset]
+    Usage: seed|s [options] <asset> [assets...]
 
     generate dummy data for chosen asset(s):
 
@@ -167,14 +167,10 @@ This generator can also be further configured with the following command line fl
            $ sapphire seed user
 
 
-         EXAMPLE 2: generate dummy data for multiple assets
+         EXAMPLE 2: generate dummy data for single asset, define count
 
-           $ sapphire seed user book library
+           $ sapphire seed user --count 10000
 
-
-         EXAMPLE 3: generate dummy data for all assets
-
-           $ sapphire seed all
 
     Options:
       -c, --count <count>  specify the number of instances of the asset
