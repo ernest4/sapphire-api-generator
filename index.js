@@ -168,7 +168,7 @@ program
 
     console.log(
       `
-      seeding asset "${asset}":
+      seeding asset(s):
       count: ${options.count}
       `
     );
@@ -176,19 +176,24 @@ program
     if (asset === "all") {
       const dir = `./api/v${options.apiv}/models/`;
 
-      // JSON backed schema
-      fs.readdirSync(dir).forEach(subdir => {
-        if (subdir !== "all.models.js" && !subdir.match(/.txt/)) {
-          fs.readdirSync(`${dir}${subdir}`).forEach(file => {
-            if (file.match(/.model.js/)) {
-              let asset = file.replace(/.model.js/, "");
-              console.log(`      seeding ${asset}`);
-              let subPath = `${subdir}/${file}`.replace(/.js/, "");
-              seed(asset, options, subPath);
-            }
-          });
-        }
-      });
+      try {
+        // JSON backed schema
+        fs.readdirSync(dir).forEach(subdir => {
+          if (subdir !== "all.models.js" && !subdir.match(/.txt/)) {
+            fs.readdirSync(`${dir}${subdir}`).forEach(file => {
+              if (file.match(/.model.js/)) {
+                let asset = file.replace(/.model.js/, "");
+                console.log(`      seeding ${asset}`);
+                let subPath = `${subdir}/${file}`.replace(/.js/, "");
+                seed(asset, options, subPath);
+              }
+            });
+          }
+        });
+      } catch (err) {
+        console.log(err);
+        throw err;
+      }
     } else {
       try {
         console.log(`      seeding ${asset}`);
@@ -201,14 +206,16 @@ program
           seed(asset, options, subPath);
         });
       } catch (err) {
-        // handleGenerateTestsError(err);
-        console.log(`failed to seed ${asset}`);
         console.log(err);
+        throw err;
       }
     }
 
     console.log(`
-      done`);
+      done
+      `);
+    // process.exitCode = 0;
+    // process.exit(); //MVP. TODO: fix the server not quitting after seeding bug after 1.0
   });
 
 // TODO: implement in the future
