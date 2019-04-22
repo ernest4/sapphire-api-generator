@@ -141,6 +141,23 @@ program
 program
   .command("seed <asset> [assets...]")
   .alias("s")
+  // (WIP.)
+  // .description(
+  //   `generate dummy data for chosen asset(s):
+
+  //    EXAMPLE 1: generate dummy data for single asset
+
+  //      $ sapphire seed user
+
+  //    EXAMPLE 2: generate dummy data for multiple assets
+
+  //      $ sapphire seed user book library
+
+  //    EXAMPLE 3: generate dummy data for all assets
+
+  //      $ sapphire seed all
+  //   `
+  // )
   .description(
     `generate dummy data for chosen asset(s): 
   
@@ -149,18 +166,13 @@ program
        $ sapphire seed user
 
 
-     EXAMPLE 2: generate dummy data for multiple assets
+     EXAMPLE 2: generate dummy data for single asset, define count
 
-       $ sapphire seed user book library
-
-
-     EXAMPLE 3: generate dummy data for all assets
-
-       $ sapphire seed all
+       $ sapphire seed user --count 10000
     `
   )
   .option("-c, --count <count>", "specify the number of instances of the asset")
-  .option("--apiv <version>", "specify the api version under which to seed the asset")
+  // (WIP) .option("--apiv <version>", "specify the api version under which to seed the asset")
   .action((asset, args, options) => {
     checkIsInline();
     options.count = options.count || 10;
@@ -173,49 +185,62 @@ program
       `
     );
 
-    if (asset === "all") {
-      const dir = `./api/v${options.apiv}/models/`;
-
-      try {
-        // JSON backed schema
-        fs.readdirSync(dir).forEach(subdir => {
-          if (subdir !== "all.models.js" && !subdir.match(/.txt/)) {
-            fs.readdirSync(`${dir}${subdir}`).forEach(file => {
-              if (file.match(/.model.js/)) {
-                let asset = file.replace(/.model.js/, "");
-                console.log(`      seeding ${asset}`);
-                let subPath = `${subdir}/${file}`.replace(/.js/, "");
-                seed(asset, options, subPath);
-              }
-            });
-          }
-        });
-      } catch (err) {
-        console.log(err);
-        throw err;
-      }
-    } else {
-      try {
-        console.log(`      seeding ${asset}`);
-        let subPath = `${asset}/${asset}.model`;
-        seed(asset, options, subPath);
-
-        args.forEach(asset => {
-          console.log(`      seeding ${asset}`);
-          let subPath = `${asset}/${asset}.model`;
-          seed(asset, options, subPath);
-        });
-      } catch (err) {
-        console.log(err);
-        throw err;
-      }
+    try {
+      console.log(`      seeding ${asset}`);
+      let subPath = `${asset}/${asset}.model`;
+      seed(asset, options, subPath);
+    } catch (err) {
+      console.log(err);
+      throw err;
     }
 
-    console.log(`
-      done
-      `);
-    // process.exitCode = 0;
-    // process.exit(); //MVP. TODO: fix the server not quitting after seeding bug after 1.0
+    // hopefully a greater man than me (possibly future me?) will come along and make seeding work
+    // with 'all' and vaiadic number of assests, but for the time being I just can't figure out
+    // how to juggle the mongoose connection from a command line interface context... :/
+
+    // WIP: seed all...
+    // WIP: seed ass1 ass2...
+    // if (asset === "all") {
+    //   const dir = `./api/v${options.apiv}/models/`;
+
+    //   try {
+    //     // JSON backed schema
+    //     fs.readdirSync(dir).forEach(subdir => {
+    //       if (subdir !== "all.models.js" && !subdir.match(/.txt/)) {
+    //         fs.readdirSync(`${dir}${subdir}`).forEach(file => {
+    //           if (file.match(/.model.js/)) {
+    //             let asset = file.replace(/.model.js/, "");
+    //             console.log(`      seeding ${asset}`);
+    //             let subPath = `${subdir}/${file}`.replace(/.js/, "");
+    //             seed(asset, options, subPath);
+    //           }
+    //         });
+    //       }
+    //     });
+    //   } catch (err) {
+    //     console.log(err);
+    //     throw err;
+    //   }
+    // } else {
+    //   try {
+    //     console.log(`      seeding ${asset}`);
+    //     let subPath = `${asset}/${asset}.model`;
+    //     seed(asset, options, subPath);
+
+    //     args.forEach(asset => {
+    //       console.log(`      seeding ${asset}`);
+    //       let subPath = `${asset}/${asset}.model`;
+    //       seed(asset, options, subPath);
+    //     });
+    //   } catch (err) {
+    //     console.log(err);
+    //     throw err;
+    //   }
+    // }
+
+    // console.log(`
+    //   done
+    //   `);
   });
 
 // TODO: implement in the future
