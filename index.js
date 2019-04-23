@@ -524,8 +524,6 @@ function processFieldProperty(fieldName, fieldType, fieldPropertyName, fieldProp
   fieldPropertyName = fieldPropertyName.toLowerCase();
   fieldType = fieldType.toLowerCase();
 
-  // TODO: resolve type properties for different types
-
   switch (fieldType) {
     case "string":
       fieldPropsValue = handleStringTypeProperties(...arguments);
@@ -535,18 +533,8 @@ function processFieldProperty(fieldName, fieldType, fieldPropertyName, fieldProp
       fieldPropsValue = handleNumberDateTypeProps(...arguments);
       break;
     default:
-      fieldPropertyValue = handleRestTypeProperties(...arguments);
+      fieldPropsValue = handleRestTypeProperties(...arguments);
   }
-
-  // switch (fieldPropertyName) {
-  //   case "required":
-  //     fieldPropertyValue = [true, `${fieldName} must have value ${fieldType}`];
-  //     break;
-  //   default:
-  //     console.log(`
-  //     WARNING: field property ${fieldPropertyName} not recognised.
-  //     `);
-  // }
 
   fieldProperty[fieldPropertyName] = fieldPropsValue;
 
@@ -578,7 +566,7 @@ function handleStringTypeProperties(fieldName, fieldType, fieldPropertyName, fie
       fieldPropertyValue = convertStrToJavascript(fieldPropsValue);
       break;
     case "enum":
-      fieldPropertyValue = convertStrToJavascript(fieldPropsValue);
+      fieldPropertyValue = convertStrToJavascript(fieldPropsValue); // this doesnt work...
       break;
     case "minlength":
       fieldPropertyValue = parseInt(fieldPropsValue);
@@ -586,7 +574,6 @@ function handleStringTypeProperties(fieldName, fieldType, fieldPropertyName, fie
     case "maxlength":
       fieldPropertyValue = parseInt(fieldPropsValue);
       break;
-    // TODO: the rest...
     default:
       fieldPropertyValue = handleRestTypeProperties(...arguments);
   }
@@ -635,13 +622,58 @@ function handleRestTypeProperties(fieldName, fieldType, fieldPropertyName, field
     case "required":
       fieldPropertyValue = [true, `${fieldName} must have value ${fieldType}`];
       break;
+    case "default":
+      fieldPropertyValue = processDefault(...arguments);
+      break;
+    case "select":
+      fieldPropertyValue = fieldPropsValue;
+      break;
+    case "validate":
+      fieldPropertyValue = fieldPropsValue;
+      break;
+    case "get":
+      fieldPropertyValue = fieldPropsValue;
+      break;
+    case "set":
+      fieldPropertyValue = fieldPropsValue;
+      break;
+    case "alias":
+      fieldPropertyValue = fieldPropsValue;
+      break;
+    case "index":
+    case "unique":
+    case "sparse":
+      fieldPropertyValue = true;
+      break;
     default:
       console.log(`
       WARNING: field property ${fieldPropertyName} not recognised.
+
+      Aborting update.
       `);
+      process.exit(1);
   }
 
   return fieldPropertyValue;
+}
+
+function processDefault(fieldName, fieldType, fieldPropertyName, fieldPropsValue) {
+  if (fieldType === "string") {
+    // For default values with string, you must use single quotes within double quotes
+    if (fieldPropsValue.match(/^'.*'$/)) return fieldPropsValue;
+    else {
+      console.log(`
+      FAILED: field ${fieldName}
+
+      For default values with string, you must use single quotes within double quotes
+
+      Example: default:"'word'"
+
+      Aborting update.
+      `);
+      process.exit(1);
+    }
+  } else return fieldPropsValue;
 }
 
 function processFieldName(fieldName) {
