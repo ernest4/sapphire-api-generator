@@ -490,45 +490,41 @@ function updateAssetModel(asset, args, dir) {
   } catch (err) {
     throw err;
   }
-  // load the model json into object
-  // parse the commands
-  // apply the commands to object
-  // save object as json
 }
 
-function modifyFields(schemaObject, instructions) {
-  let instructionSet = {};
-  let lastEditedField = null;
-  for (let i = 0; i < instructions.length; i++) {
-    instructionSet = processInstruction(instructions[i], lastEditedField);
+function modifyFields(schemaObject, tokens) {
+  let field = [];
+  let token = "";
 
-    lastEditedField = instructionSet.lastEditedField;
+  let newInstruction = true;
+  let fieldName = "";
+  let fieldType = null;
+  for (let i = 0; i < tokens.length; i++) {
+    token = tokens[i];
 
-    if (instructionSet.field === ",") continue; // field definitions are comma separated
+    // field definitions are comma separated
+    if (token === ",") {
+      newInstruction = true;
+      continue;
+    }
 
-    schemaObject[instructionSet.field] = instructionSet.body;
+    field = token.split(":");
+
+    if (newInstruction) {
+      fieldName = field[0];
+      fieldType = field[1];
+      schemaObject[fieldName] = { type: fieldType };
+      newInstruction = false;
+    } else {
+      fieldPropertyName = field[0];
+      fieldPropertyValue = field[1];
+      schemaObject[fieldName] = {
+        ...schemaObject[fieldName],
+        [fieldPropertyName]: fieldPropertyValue
+      };
+    }
   }
   return;
-}
-
-function processInstruction(instruction, lastEditedField) {
-  if (instruction === ",") return { field: ",", lastEditedField: "," };
-  
-  let instructionSet = {};
-
-  let keyValueArray = parse(instruction);
-
-  for (const keyValue of keyValueArray) {
-    instructionSet.field = keyValue[0];
-    instructionSet.body = keyValue[1];
-  }
-
-  // instructionSet.lastEditedField = ???
-
-  // instructionSet.field = "living";
-  // instructionSet.body = { type: "Boolean", default: false };
-
-  return instructionSet;
 }
 
 function generateTests(asset, opts) {
