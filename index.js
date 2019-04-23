@@ -493,7 +493,7 @@ function updateAssetModel(asset, args, dir) {
 }
 
 function modifyFields(schemaObject, tokens) {
-  let field = [];
+  let subTokens = [];
   let token = "";
 
   let newInstruction = true;
@@ -508,23 +508,46 @@ function modifyFields(schemaObject, tokens) {
       continue;
     }
 
-    field = token.split(":");
+    subTokens = token.split(":");
 
     if (newInstruction) {
-      fieldName = processFieldName(field[0]);
-      fieldType = processFielType(field[1]);
+      fieldName = processFieldName(subTokens[0]);
+      fieldType = processFielType(subTokens[1]);
       schemaObject[fieldName] = { type: fieldType };
       newInstruction = false;
     } else {
-      fieldPropertyName = field[0];
-      fieldPropertyValue = field[1];
       schemaObject[fieldName] = {
         ...schemaObject[fieldName],
-        [fieldPropertyName]: fieldPropertyValue
+        ...processFieldProperty(subTokens[0], subTokens[1] || null, fieldName, fieldType)
       };
     }
   }
   return;
+}
+
+function processFieldProperty(fieldPropertyName, fieldPropertyValue, fieldName, fieldType) {
+  let fieldProperty = {};
+
+  fieldPropertyName = fieldPropertyName.toLowerCase();
+  fieldType = fieldType ? fieldType.toLowerCase() : "";
+
+  switch (fieldPropertyName) {
+    case "required":
+      fieldPropertyValue = [true, `${fieldName} must have value ${fieldType}`];
+      break;
+    default:
+      console.log(`
+      WARNING: field property ${fieldPropertyName} not recognised.
+      `);
+  }
+
+  fieldProperty[fieldPropertyName] = fieldPropertyValue;
+
+  // {
+  //   fieldPropertyName: fieldPropertyValue;
+  // }
+
+  return fieldProperty;
 }
 
 function processFieldName(fieldName) {
