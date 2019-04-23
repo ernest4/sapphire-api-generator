@@ -258,8 +258,8 @@ tests:
 
        $ sapphire update user name:object , name.first:string required:’Enter
          User name’ , name.last:string required:’Enter User name’ , birthday:date
-           , gender:string enum:[‘male’, ‘female’, ‘other’] default:’other’ , 
-         socialId:string required:’User must have unique social ID’ unique , 
+           , gender:string enum:"['male', 'female', 'other']" default:"'other'" , 
+         socialId:string required:"User must have unique social ID" unique , 
          createDate:date default:now , user:1m:hobby
 
 
