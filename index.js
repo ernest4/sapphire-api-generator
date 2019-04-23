@@ -511,8 +511,8 @@ function modifyFields(schemaObject, tokens) {
     field = token.split(":");
 
     if (newInstruction) {
-      fieldName = field[0];
-      fieldType = field[1];
+      fieldName = processFieldName(field[0]);
+      fieldType = processFielType(field[1]);
       schemaObject[fieldName] = { type: fieldType };
       newInstruction = false;
     } else {
@@ -525,6 +525,58 @@ function modifyFields(schemaObject, tokens) {
     }
   }
   return;
+}
+
+function processFieldName(fieldName) {
+  return fieldName;
+}
+
+function processFielType(fieldType) {
+  const validFieldTypes = [
+    "String",
+    "Date",
+    "Number",
+    "Boolean",
+    "Buffer",
+    "Map",
+    "Schema.Types.Mixed",
+    "mongoose.Mixed",
+    "Object",
+    "{}",
+    "[Date]",
+    "[{}]",
+    "[Schema.Types.Mixed]",
+    "[String]",
+    "[Number]",
+    "[Buffer]",
+    "[Boolean]",
+    "[]",
+    "Array",
+    "[Schema.Types.ObjectId]",
+    "[mongoose.Schema.ObjectId]",
+    "[[]]",
+    "[[Date]]",
+    "[[{}]]",
+    "[[Schema.Types.Mixed]]",
+    "[[String]]",
+    "[[Number]]",
+    "[[Buffer]]",
+    "[[Boolean]]",
+    "[[[]]]",
+    "mongoose.Schema.ObjectId",
+    "Schema.Types.ObjectId",
+    "Schema.Types.Decimal128"
+  ];
+
+  for (let validFieldType of validFieldTypes)
+    if (fieldType.toLowerCase() === validFieldType.toLowerCase()) return validFieldType;
+
+  console.log(`
+    FAILED: given field type '${fieldType}' is not recognised as a valid field type
+
+    Aborting update.
+  `);
+  process.exit(1);
 }
 
 function generateTests(asset, opts) {
