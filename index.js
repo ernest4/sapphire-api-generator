@@ -11,6 +11,7 @@ const { seed } = require("./lib/seed/seed");
 const fs = require("fs");
 const program = require("commander");
 const inquirer = require("inquirer");
+const { convertStrToJavascript } = require("./lib/utils/convertStrToJS");
 var packageJSON = require("./package.json");
 
 const SAPPHIRE_VERSION = packageJSON.version;
@@ -457,10 +458,6 @@ function deleteAsset(asset, options) {
   return;
 }
 
-function* update(asset, options) {
-  return "updating...";
-}
-
 function updateAssetModel(asset, args, dir) {
   console.log("in updateAssetModel");
   console.log(asset);
@@ -468,10 +465,6 @@ function updateAssetModel(asset, args, dir) {
   instructions
   `);
   console.log(args);
-  console.log(`
-  dir
-  `);
-  console.log(`${dir}${asset}/${asset}.schema.json`);
 
   const schemaFilePath = `${dir}${asset}/${asset}.schema.json`;
   let schemaJSONSource = "";
@@ -518,18 +511,125 @@ function modifyFields(schemaObject, tokens) {
     } else {
       schemaObject[fieldName] = {
         ...schemaObject[fieldName],
-        ...processFieldProperty(subTokens[0], subTokens[1] || null, fieldName, fieldType)
+        ...processFieldProperty(fieldName, fieldType, subTokens[0], subTokens[1] || null)
       };
     }
   }
   return;
 }
 
-function processFieldProperty(fieldPropertyName, fieldPropertyValue, fieldName, fieldType) {
+function processFieldProperty(fieldName, fieldType, fieldPropertyName, fieldPropsValue) {
   let fieldProperty = {};
 
   fieldPropertyName = fieldPropertyName.toLowerCase();
-  fieldType = fieldType ? fieldType.toLowerCase() : "";
+  fieldType = fieldType.toLowerCase();
+
+  // TODO: resolve type properties for different types
+
+  switch (fieldType) {
+    case "string":
+      fieldPropsValue = handleStringTypeProperties(...arguments);
+      break;
+    case "number":
+    case "date":
+      fieldPropsValue = handleNumberDateTypeProps(...arguments);
+      break;
+    default:
+      fieldPropertyValue = handleRestTypeProperties(...arguments);
+  }
+
+  // switch (fieldPropertyName) {
+  //   case "required":
+  //     fieldPropertyValue = [true, `${fieldName} must have value ${fieldType}`];
+  //     break;
+  //   default:
+  //     console.log(`
+  //     WARNING: field property ${fieldPropertyName} not recognised.
+  //     `);
+  // }
+
+  fieldProperty[fieldPropertyName] = fieldPropsValue;
+
+  return fieldProperty;
+}
+
+function handleStringTypeProperties(fieldName, fieldType, fieldPropertyName, fieldPropsValue) {
+  // mongoose documentation.
+  // lowercase: boolean, whether to always call .toLowerCase() on the value
+  // uppercase: boolean, whether to always call .toUpperCase() on the value
+  // trim: boolean, whether to always call .trim() on the value
+  // match: RegExp, creates a validator that checks if the value matches the given regular expression
+  // enum: Array, creates a validator that checks if the value is in the given array.
+  // minlength: Number, creates a validator that checks if the value length is not less than the given number
+  // maxlength: Number, creates a validator that checks if the value length is not greater than the given number
+
+  let fieldPropertyValue;
+  switch (fieldPropertyName) {
+    case "lowercase":
+      fieldPropertyValue = true;
+      break;
+    case "uppercase":
+      fieldPropertyValue = true;
+      break;
+    case "trim":
+      fieldPropertyValue = true;
+      break;
+    case "match":
+      fieldPropertyValue = convertStrToJavascript(fieldPropsValue);
+      break;
+    case "enum":
+      fieldPropertyValue = convertStrToJavascript(fieldPropsValue);
+      break;
+    case "minlength":
+      fieldPropertyValue = parseInt(fieldPropsValue);
+      break;
+    case "maxlength":
+      fieldPropertyValue = parseInt(fieldPropsValue);
+      break;
+    // TODO: the rest...
+    default:
+      fieldPropertyValue = handleRestTypeProperties(...arguments);
+  }
+
+  return fieldPropertyValue;
+}
+
+function handleNumberDateTypeProps(fieldName, fieldType, fieldPropertyName, fieldPropsValue) {
+  // mongoose documentation.
+  // min:
+  // max:
+
+  let fieldPropertyValue;
+  switch (fieldPropertyName) {
+    case "min":
+      fieldPropertyValue = fieldPropsValue;
+      break;
+    case "max":
+      fieldPropertyValue = fieldPropsValue;
+      break;
+    default:
+      fieldPropertyValue = handleRestTypeProperties(...arguments);
+  }
+
+  return fieldPropertyValue;
+}
+
+function handleRestTypeProperties(fieldName, fieldType, fieldPropertyName, fieldPropsValue) {
+  // mongoose documenation.
+
+  // required: boolean or function, if true adds a required validator for this property
+  // default: Any or function, sets a default value for the path. If the value is a function, the return value of the function is used as the default.
+  // select: boolean, specifies default projections for queries
+  // validate: function, adds a validator function for this property
+  // get: function, defines a custom getter for this property using Object.defineProperty().
+  // set: function, defines a custom setter for this property using Object.defineProperty().
+  // alias: string, mongoose >= 4.10.0 only. Defines a virtual with the given name that gets/sets this path.
+
+  // index: boolean, whether to define an index on this property.
+  // unique: boolean, whether to define a unique index on this property.
+  // sparse: boolean, whether to define a sparse index on this property.
+
+  let fieldPropertyValue;
 
   switch (fieldPropertyName) {
     case "required":
@@ -541,13 +641,7 @@ function processFieldProperty(fieldPropertyName, fieldPropertyValue, fieldName, 
       `);
   }
 
-  fieldProperty[fieldPropertyName] = fieldPropertyValue;
-
-  // {
-  //   fieldPropertyName: fieldPropertyValue;
-  // }
-
-  return fieldProperty;
+  return fieldPropertyValue;
 }
 
 function processFieldName(fieldName) {
