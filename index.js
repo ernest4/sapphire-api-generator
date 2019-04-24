@@ -12,6 +12,7 @@ const fs = require("fs");
 const program = require("commander");
 const inquirer = require("inquirer");
 const { convertStrToJavascript } = require("./lib/utils/convertStrToJS");
+const { capitalize } = require("./lib/utils/capitalize");
 var packageJSON = require("./package.json");
 
 const SAPPHIRE_VERSION = packageJSON.version;
@@ -260,7 +261,7 @@ tests:
          User name’ , name.last:string required:’Enter User name’ , birthday:date
            , gender:string enum:"['male', 'female', 'other']" default:"'other'" , 
          socialId:string required:"User must have unique social ID" unique , 
-         createDate:date default:now , user:1m:hobby
+         createDate:date default:Date.now , ref:hobby, ref:user alias:friends
 
 
      EXAMPLE 2: generate tests for the given asset after you modified its JSON
@@ -459,8 +460,6 @@ function deleteAsset(asset, options) {
 }
 
 function updateAssetModel(asset, args, dir) {
-  console.log("in updateAssetModel");
-  console.log(asset);
   console.log(`
   instructions
   `);
@@ -492,6 +491,7 @@ function modifyFields(schemaObject, tokens) {
   let newInstruction = true;
   let fieldName = "";
   let fieldType = null;
+  let refName = "";
   for (let i = 0; i < tokens.length; i++) {
     token = tokens[i];
 
@@ -506,6 +506,15 @@ function modifyFields(schemaObject, tokens) {
     if (newInstruction) {
       fieldName = processFieldName(subTokens[0]);
       fieldType = processFielType(subTokens[1]);
+      refName = processRefName(subTokens[2]);
+
+      if (fieldType === "ref" && refName) {
+        // array of references can handle 1:1, 1:m and m:n relationships all at once!
+        // all the logic can be stored in a single service on one model too!
+        schemaObject[refName] = [{ type: "mongoose.Schema.ObjectId", ref: capitalize(refName) }];
+        continue;
+      }
+
       schemaObject[fieldName] = { type: fieldType };
       newInstruction = false;
     } else {
@@ -678,6 +687,10 @@ function processDefault(fieldName, fieldType, fieldPropertyName, fieldPropsValue
 
 function processFieldName(fieldName) {
   return fieldName;
+}
+
+function processRefName(refName) {
+  return refName;
 }
 
 function processFielType(fieldType) {
