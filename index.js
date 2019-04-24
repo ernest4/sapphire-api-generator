@@ -12,7 +12,7 @@ const fs = require("fs");
 const program = require("commander");
 const inquirer = require("inquirer");
 const { convertStrToJavascript } = require("./lib/utils/convertStrToJS");
-const { capitalize } = require("./lib/utils/capitalize");
+const capitalize = require("./lib/utils/capitalize");
 var packageJSON = require("./package.json");
 
 const SAPPHIRE_VERSION = packageJSON.version;
@@ -261,7 +261,7 @@ tests:
          User name’ , name.last:string required:’Enter User name’ , birthday:date
            , gender:string enum:"['male', 'female', 'other']" default:"'other'" , 
          socialId:string required:"User must have unique social ID" unique , 
-         createDate:date default:Date.now , ref:hobby, ref:user alias:friends
+         createDate:date default:Date.now , hobby:ref, user:ref alias:friends
 
 
      EXAMPLE 2: generate tests for the given asset after you modified its JSON
@@ -506,14 +506,6 @@ function modifyFields(schemaObject, tokens) {
     if (newInstruction) {
       fieldName = processFieldName(subTokens[0]);
       fieldType = processFielType(subTokens[1]);
-      refName = processRefName(subTokens[2]);
-
-      if (fieldType === "ref" && refName) {
-        // array of references can handle 1:1, 1:m and m:n relationships all at once!
-        // all the logic can be stored in a single service on one model too!
-        schemaObject[refName] = [{ type: "mongoose.Schema.ObjectId", ref: capitalize(refName) }];
-        continue;
-      }
 
       schemaObject[fieldName] = { type: fieldType };
       newInstruction = false;
@@ -541,6 +533,9 @@ function processFieldProperty(fieldName, fieldType, fieldPropertyName, fieldProp
     case "date":
       fieldPropsValue = handleNumberDateTypeProps(...arguments);
       break;
+    case "[schema.types.objectid]":
+      fieldPropsValue = handleModelReferenceTypeProps(...arguments);
+      break;
     default:
       fieldPropsValue = handleRestTypeProperties(...arguments);
   }
@@ -548,6 +543,21 @@ function processFieldProperty(fieldName, fieldType, fieldPropertyName, fieldProp
   fieldProperty[fieldPropertyName] = fieldPropsValue;
 
   return fieldProperty;
+}
+
+function handleModelReferenceTypeProps(fieldName, fieldType, fieldPropertyName, fieldPropsValue) {
+  // ref: my own custom catch all for all references, defaults to m:m relationship
+
+  let fieldPropertyValue;
+  switch (fieldPropertyName) {
+    case "ref":
+      fieldPropertyValue = capitalize(fieldPropsValue);
+      break;
+    default:
+      fieldPropertyValue = handleRestTypeProperties(...arguments);
+  }
+
+  return fieldPropertyValue;
 }
 
 function handleStringTypeProperties(fieldName, fieldType, fieldPropertyName, fieldPropsValue) {
@@ -727,11 +737,15 @@ function processFielType(fieldType) {
     "[[[]]]",
     "mongoose.Schema.ObjectId",
     "Schema.Types.ObjectId",
-    "Schema.Types.Decimal128"
+    "Schema.Types.Decimal128",
+    "ref" // my custom type for generation purposes!
   ];
 
   for (let validFieldType of validFieldTypes)
-    if (fieldType.toLowerCase() === validFieldType.toLowerCase()) return validFieldType;
+    if (fieldType.toLowerCase() === validFieldType.toLowerCase()) {
+      if (validFieldType.toLowerCase() === "ref") return "[Schema.Types.ObjectId]";
+      else return validFieldType;
+    }
 
   console.log(`
     FAILED: given field type '${fieldType}' is not recognised as a valid field type
