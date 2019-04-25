@@ -430,6 +430,10 @@ function* generate(asset, options) {
   const testDirs = ["custom", "generated"];
 
   try {
+    const sapphireJSON = fs.readFileSync(`./sapphire.json`);
+    const inline = JSON.parse(sapphireJSON).inline;
+    options.inline = inline;
+
     yield `
     generating asset "${asset}":
    `;
@@ -440,7 +444,6 @@ function* generate(asset, options) {
     }
 
     for (const fileCreator of generateFileCreators) yield fileCreator(asset, options);
-    generateTests(asset, options);
 
     yield `
        success!
