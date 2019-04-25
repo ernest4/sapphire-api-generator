@@ -10,7 +10,7 @@ Convention over configuration? Why choose?! Welcome to the configurable conventi
 
 * If you’re a newbie, starting out and want to build web apps quickly I’d advise Rails. Solid MVC fundamentals will do you well. Once you come back note that you wont find 'fat' models here, but an SOA based architecture!
 
-* If you know what MVC is and appreciate Rails, but want the speed and power of Node.js with the niceties of Rails, this is the framework for you.
+* If you know what MVC is and appreciate Rails, but want the speed and power of Node.js, this is the framework for you.
 
 **All feedback wellcome, I want this tool to be the best tool it can be!**
 
