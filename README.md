@@ -54,12 +54,12 @@ $ npm install
 Make sure [MongoDB is installed](https://docs.mongodb.com/v3.2/administration/install-community/).
 Run the **Mongo database** before launching the server:
 
-* #### Mac
+* Mac
 ```bash
 $ mongod --config /usr/local/etc/mongod.conf
 ```
 
-* #### Ubuntu
+* Ubuntu
 ```bash
 $ sudo service mongod start
 ```
@@ -151,7 +151,7 @@ This generator can also be further configured with the following command line fl
 
       -h, --help     output usage information
       
- #### I want to add a new asset to my sapphire project:
+#### I want to add a new asset to my sapphire project:
  
     Usage: generate|g [options] <asset>
 
@@ -163,7 +163,7 @@ This generator can also be further configured with the following command line fl
       -a, --auth        add authorization of routes
       -h, --help        output usage information
       
- #### I want to seed an asset in my database:
+#### I want to seed an asset in my database:
  
     Usage: seed|s [options] <asset> [assets...]
 
@@ -184,7 +184,7 @@ This generator can also be further configured with the following command line fl
       -c, --count <count>  specify the number of instances of the asset
       -h, --help           output usage information
       
- #### I want to update an existing assets model:
+#### I want to update an existing assets model:
  
     Usage: update|u [options] <asset> [args...]
 
