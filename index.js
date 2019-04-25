@@ -748,8 +748,24 @@ function processFielType(fieldType) {
 
   for (let validFieldType of validFieldTypes)
     if (fieldType.toLowerCase() === validFieldType.toLowerCase()) {
-      if (validFieldType.toLowerCase() === "ref") return "[Schema.Types.ObjectId]";
-      else return validFieldType;
+      if (validFieldType.toLowerCase() === "ref") {
+        console.log(`
+
+    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    WARNING: neither tests nor service logic are automatically configured to wire up
+    and run for referenced models currently.
+    
+    INFO: Multi document model relationship boilerplate is generated in services,
+    but not configured by default, please open the service file for this model and
+    read the comments to configure multi document relationships.
+
+    INFO: Please write custom tests to check for correct multi document relationship
+    configuration.
+    <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+        `);
+        return "[Schema.Types.ObjectId]";
+      } else return validFieldType;
     }
 
   console.log(`
