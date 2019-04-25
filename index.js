@@ -436,6 +436,7 @@ function* generate(asset, options) {
     }
 
     for (const fileCreator of generateFileCreators) yield fileCreator(asset, options);
+    generateTests(asset, options);
 
     yield `
        success!
