@@ -257,11 +257,11 @@ tests:
 
      EXAMPLE 1: change the asset's model, add relationships to other models
 
-       $ sapphire update user name:object , name.first:string required:’Enter
-         User name’ , name.last:string required:’Enter User name’ , birthday:date
-           , gender:string enum:"['male', 'female', 'other']" default:"'other'" , 
-         socialId:string required:"User must have unique social ID" unique , 
-         createDate:date default:Date.now , hobby:ref, user:ref alias:friends
+       $ sapphire update user name:string required:’Enter User name’ ,
+         birthday:date , gender:string enum:"['male', 'female', 'other']"
+         default:"'other'" , socialId:string required:"User must have
+         unique social ID" unique , createDate:date default:Date.now ,
+         hobbies:ref ref:hobby , users:ref ref:user
 
 
      EXAMPLE 2: generate tests for the given asset after you modified its JSON
@@ -295,7 +295,8 @@ tests:
             fs.readdirSync(`${dir}${subdir}`).forEach(file => {
               if (file.match(/.schema.json/)) {
                 let asset = file.replace(/.schema.json/, "");
-                console.log(`generating tests for ${asset}`);
+                console.log(`
+    generating tests for ${asset}`);
                 generateTests(asset, options);
               }
             });
@@ -303,7 +304,8 @@ tests:
         });
       } else {
         args.forEach(asset => {
-          console.log(`generating tests for ${asset}`);
+          console.log(`
+    generating tests for ${asset}`);
           try {
             generateTests(asset, options);
           } catch (err) {
@@ -312,17 +314,20 @@ tests:
         });
       }
     } else {
-      console.log(`updating asset ${asset}`);
+      console.log(`
+    updating asset ${asset}`);
       updateAssetModel(asset, args, dir);
       try {
-        console.log(`generating tests for ${asset}`);
+        console.log(`
+    generating tests for ${asset}`);
         generateTests(asset, options);
       } catch (err) {
         handleGenerateTestsError(err);
       }
     }
 
-    console.log(`done`);
+    console.log(`
+    done`);
   });
 
 // // TODO: implement in the future
@@ -395,8 +400,14 @@ function* init(app_name, options, sapphireVersion) {
 
        $ cd ${app_name}
        $ npm install
+
+
+       Get running quickly:
+
        $ sapphire generate my_first_asset
+       $ sapphire update my_first_asset name:string required , age:number
        $ npm run test
+       $ sapphire seed my_first_asset
        $ npm run nodemon
     `;
 
@@ -460,11 +471,6 @@ function deleteAsset(asset, options) {
 }
 
 function updateAssetModel(asset, args, dir) {
-  console.log(`
-  instructions
-  `);
-  console.log(args);
-
   const schemaFilePath = `${dir}${asset}/${asset}.schema.json`;
   let schemaJSONSource = "";
   let schemaObject = {};
@@ -491,7 +497,6 @@ function modifyFields(schemaObject, tokens) {
   let newInstruction = true;
   let fieldName = "";
   let fieldType = null;
-  let refName = "";
   for (let i = 0; i < tokens.length; i++) {
     token = tokens[i];
 
@@ -710,7 +715,7 @@ function processFielType(fieldType) {
     "Number",
     "Boolean",
     "Buffer",
-    "Map",
+    //"Map",
     "Schema.Types.Mixed",
     "mongoose.Mixed",
     "Object",
@@ -748,7 +753,8 @@ function processFielType(fieldType) {
     }
 
   console.log(`
-    FAILED: given field type '${fieldType}' is not recognised as a valid field type
+    FAILED: given field type '${fieldType}' is not currently supported or
+    recognised as a valid field type
 
     Aborting update.
   `);
