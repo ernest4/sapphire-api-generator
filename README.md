@@ -70,6 +70,12 @@ Generate the first **asset**:
 $ sapphire generate user
 ```
 
+Update the first **asset**:
+
+```bash
+$ sapphire update user name:string required , age:number default:24 , gender:string enum:"['m','f','o']" default:"'o'"
+```
+
 Run the tests:
 
 ```bash
@@ -119,6 +125,7 @@ This generator can also be further configured with the following command line fl
 ![Alt Text](https://media.giphy.com/media/lT9fOcP6wusCp8l3aJ/giphy.gif)
 
     Usage: init|i [options] [app_name]
+
 
       initialize the base structure of your api:
 
@@ -173,6 +180,7 @@ This generator can also be further configured with the following command line fl
 
 
     Options:
+      --apiv <version>  specify the api version under which to seed the asset (WIP. COMING SOON)
       -c, --count <count>  specify the number of instances of the asset
       -h, --help           output usage information
       
@@ -185,11 +193,11 @@ This generator can also be further configured with the following command line fl
 
          EXAMPLE 1: change the asset's model, add relationships to other models (WIP. COMING SOON)
 
-           $ sapphire update user name:object , name.first:string required:’Enter
-             User name’ , name.last:string required:’Enter User name’ , birthday:date
-               , gender:string enum:[‘male’, ‘female’, ‘other’] default:’other’ ,
-             socialId:string required:’User must have unique social ID’ unique ,
-             createDate:date default:now , user:1m:hobby
+           $ sapphire update user name:string required:’Enter User name’ ,
+             birthday:date , gender:string enum:"['male', 'female', 'other']"
+             default:"'other'" , socialId:string required:"User must have
+             unique social ID" unique , createDate:date default:Date.now ,
+             hobbies:ref ref:hobby , users:ref ref:user
 
 
          EXAMPLE 2: generate tests for the given asset after you modified its JSON
@@ -211,6 +219,7 @@ This generator can also be further configured with the following command line fl
 
 
     Options:
+      --apiv <version>  specify the api version under which to update the asset (WIP. COMING SOON)
       -r, --rest  generate the routes, controller and services for existing model of asset (WIP. COMING SOON)
       -h, --help  output usage information
       
