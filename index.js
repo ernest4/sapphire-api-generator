@@ -7,7 +7,6 @@ const {
 } = require("./lib/fileCreators/fileCreators");
 const directoryCreator = require("./lib/dirCreators/dirCreators");
 const { deleteAssetFilesSync } = require("./lib/fileRemovers");
-const { seed } = require("./lib/seed/seed");
 const fs = require("fs");
 const program = require("commander");
 const inquirer = require("inquirer");
@@ -176,6 +175,11 @@ program
   .option("-c, --count <count>", "specify the number of instances of the asset")
   // (WIP) .option("--apiv <version>", "specify the api version under which to seed the asset")
   .action((asset, args, options) => {
+    // less than ideal to make require() here but seed is hacky as is so don't
+    // want to have to make it even more hacky just to fix the import to work
+    // at the top of index.js
+    const { seed } = require("./lib/seed/seed");
+
     checkIsInline();
     options.count = options.count || 10;
     options.apiv = options.apiv || 1;
