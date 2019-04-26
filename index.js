@@ -78,7 +78,7 @@ program
           type: "confirm",
           name: "ping",
           message: "Add the /ping route for checking API status?",
-          default: true
+          default: false
         },
         {
           type: "confirm",
