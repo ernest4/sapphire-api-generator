@@ -1,6 +1,6 @@
 {
   "name": "sapphire-api-generator",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Configurable convention Node.js API generator.",
   "main": "index.js",
   "scripts": {

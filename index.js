@@ -33,7 +33,7 @@ program
   .option("--no-intro", "don't add the README.txt files which explain the directories")
   .option("--no-security", "don't add security middleware")
   .option("--no-readme", "don't add a README.md")
-  .option("--no-ping", "don't add the /ping route for checking API status")
+  .option("-p, --ping", "add the /ping route for checking API status")
   .option("-H, --heroku", "add a Heroku Procfile for deploying to Heroku")
   .option("-l, --logging", "add logging middleware")
   .option(
