@@ -114,6 +114,7 @@ This generator can also be further configured with the following command line fl
     Commands:
       init|i [options] <app_name>    initialize the base structure of your api
       generate|g [options] <asset>   generate a database backed asset for your RESTlike api
+      delete|d <asset>               delete a database backed asset from your RESTlike api
       seed|s [options] <asset>       generate dummy data for chosen asset
       update|u <asset> [args...]     change the asset's model or add relationships to other models
       example|e [options] <project>  Bootstrap an example API with at least two related models
@@ -191,13 +192,13 @@ This generator can also be further configured with the following command line fl
     change the asset's model, add relationships to other models and generate
     tests:
 
-         EXAMPLE 1: change the asset's model, add relationships to other models (WIP. COMING SOON)
+         EXAMPLE 1: change the asset's model, add relationships to other models
 
            $ sapphire update user name:string required:’Enter User name’ ,
              birthday:date , gender:string enum:"['male', 'female', 'other']"
              default:"'other'" , socialId:string required:"User must have
              unique social ID" unique , createDate:date default:Date.now ,
-             hobbies:ref ref:hobby , users:ref ref:user
+             hobbies:ref ref:hobby , friends:ref ref:user
 
 
          EXAMPLE 2: generate tests for the given asset after you modified its JSON
@@ -225,7 +226,7 @@ This generator can also be further configured with the following command line fl
       
 #### I want to delete an existing asset from my sapphire project:
 
-    Usage: delete|g [options] <asset>
+    Usage: delete|d [options] <asset>
 
     delete a database backed asset from your RESTlike api
 
