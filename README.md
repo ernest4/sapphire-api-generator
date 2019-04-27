@@ -124,7 +124,7 @@ This generator can also be further configured with the following command line fl
       example|e [options] <project>  Bootstrap an example API with at least two related models
       
 ### Use cases
-#### I want to create a new sapphire project:
+#### I want to [create](https://github.com/ernest4/sapphire-api-generator/wiki/Extras#-sapphire-init) a new sapphire project:
 *NOTE: you may use the command line directly with params (left) or launch an interactive session (right).*
 ![Alt Text](https://media.giphy.com/media/llONu0r5u4pKkEutxC/giphy.gif)
 ![Alt Text](https://media.giphy.com/media/lT9fOcP6wusCp8l3aJ/giphy.gif)
@@ -156,7 +156,7 @@ This generator can also be further configured with the following command line fl
 
       -h, --help     output usage information
       
-#### I want to add a new asset to my sapphire project:
+#### I want to [add](https://github.com/ernest4/sapphire-api-generator/wiki/Extras#-sapphire-generate) a new asset to my sapphire project:
  
     Usage: generate|g [options] <asset>
 
@@ -189,7 +189,7 @@ This generator can also be further configured with the following command line fl
       -c, --count <count>  specify the number of instances of the asset
       -h, --help           output usage information
       
-#### I want to update an existing assets model:
+#### I want to [update](https://github.com/ernest4/sapphire-api-generator/wiki/Commands:-sapphire-update#-sapphire-update-testsasset) an existing assets model:
  
     Usage: update|u [options] <asset> [args...]
 
