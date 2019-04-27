@@ -34,6 +34,10 @@ need to set up the badges later WIP WIP WIP...
 $ npm install -g sapphire-api-generator
 ```
 
+## Wiki
+
+For more information about [Sapphire](https://github.com/ernest4/sapphire-api-generator/wiki/Sapphire), what it is, how it works and how to use it, please have a look at the [wiki](https://github.com/ernest4/sapphire-api-generator/wiki)!
+
 ## Quick Start
 
 The quickest way to get started with sapphire is to utilize the executable `sapphire` to generate an api:
@@ -258,7 +262,7 @@ This generator can also be further configured with the following command line fl
       -a, --auth  add authorization for the example
       -h, --help  output usage information
 
-# Feature road map
+# [Feature road map](https://github.com/ernest4/sapphire-api-generator/wiki/Feature-Road-Map)
 
 ## Asset description language (ADL) for generate and update commands:
 
@@ -354,7 +358,7 @@ name: {
 // ... rest of schema here
 ```
 
-## Alternative technologies support: PostgreSQL, Restify, Fastify and more.
+## Alternative technologies support: PostgreSQL, Restify, Fastify and [more](https://github.com/ernest4/sapphire-api-generator/wiki/Feature-Road-Map).
 
 ### Very, VERY far down into the future
 
