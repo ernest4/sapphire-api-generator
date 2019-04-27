@@ -34,7 +34,7 @@ need to set up the badges later WIP WIP WIP...
 $ npm install -g sapphire-api-generator
 ```
 
-## Wiki
+## [Wiki](https://github.com/ernest4/sapphire-api-generator/wiki)
 
 For more information about [Sapphire](https://github.com/ernest4/sapphire-api-generator/wiki/Sapphire), what it is, how it works and how to use it, please have a look at the [wiki](https://github.com/ernest4/sapphire-api-generator/wiki)!
 
