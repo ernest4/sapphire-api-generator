@@ -138,7 +138,7 @@ This generator can also be further configured with the following command line fl
       --no-intro     don't add the README.txt files which explain the directories
       --no-security  don't add security middleware
       --no-readme    don't add a README.md
-      --no-ping      don't add the /ping route for checking API status
+      -p, --ping      don't add the /ping route for checking API status
       -H, --heroku   add a Heroku Procfile for deploying to Heroku
       -l, --logging  add logging middleware
       -i, --inline   generate the models within model.js file instead of separate schema.json
